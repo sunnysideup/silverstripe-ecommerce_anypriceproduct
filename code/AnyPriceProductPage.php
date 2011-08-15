@@ -24,7 +24,7 @@ class AnyPriceProductPage extends Product {
 		'Price' => 0
 	);
 
-	static $add_action = 'Product With Adjustable Price';
+	static $add_action = 'Adjustable Price Product';
 
 	static $icon = 'ecommerceanypriceproduct/images/treeicons/AnyPriceProductPage';
 
