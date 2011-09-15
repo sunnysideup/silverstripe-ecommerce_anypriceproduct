@@ -20,22 +20,24 @@ class AnyPriceProductPage extends Product {
 	);
 
 	public static $defaults = array(
-		'AllowPurchase' => true,
-		'Price' => 0
+		"AmountFieldLabel" => "Enter Amount",
+		"ActionFieldLabel" => "Add to cart",
+		"MinimumAmount" => 1,
+		"MaximumAmount" => 100,
+		"AllowPurchase" => true,
+		"Price" => 0
 	);
 
 	static $add_action = 'Adjustable Price Product';
 
-	static $icon = 'ecommerceanypriceproduct/images/treeicons/AnyPriceProductPage';
+	static $icon = 'ecommerce_anypriceproduct/images/treeicons/AnyPriceProductPage';
 
 	function canCreate() {
-		$bt = defined('DB::USE_ANSI_SQL') ? "\"" : "`";
-		return !DataObject::get("SiteTree", "{$bt}ClassName{$bt} = 'AnyPriceProductPage'");
+		return !DataObject::get_one("SiteTree", "ClassName = 'AnyPriceProductPage'");
 	}
 
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
-
 		$fields->addFieldsToTab(
 			"Root.Content.AddAmountForm",
 			array(
@@ -83,7 +85,6 @@ class AnyPriceProductPage extends Product {
 	}
 
 
-
 }
 
 class AnyPriceProductPage_Controller extends Product_Controller {
@@ -93,8 +94,12 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 	}
 
 	function AddNewPriceForm() {
+		$amount = $this->MinimumAmount;
+		if($newAmount = Session::get("AnyPriceProductPageAmount")) {
+			$amount = $newAmount;
+		}
 		$fields = new FieldSet(
-			new CurrencyField("Amount", $this->AmountFieldLabel)
+			new CurrencyField("Amount", $this->AmountFieldLabel, $amount)
 		);
 
 		$actions = new FieldSet(
@@ -112,19 +117,26 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 	}
 
 	function doAddNewPriceForm($data, $form) {
-		$bt = defined('DB::USE_ANSI_SQL') ? "\"" : "`";
-		$amount = floatval($data["Amount"]);
-		if($amount < $this->MinimimAmount) {
-			die("minimum amount is ....");
+		$amount = $this->parseFloat($data["Amount"]);
+		if($this->MinimumAmount && ($amount < $this->MinimumAmount)) {
+			$form->sessionMessage(_t("AnyPriceProductPage.ERRORINFORMTOOLOW", "Please enter a higher amount."), "bad");
+			Director::redirectBack();
+			return;
 		}
-		$alreadyExistingVariations = DataObject::get_one("ProductVariation", "{$bt}ProductID{$bt} = ".$this->ID." AND {$bt}Price{$bt} = ".$amount);
+		elseif($this->MaximumAmount && ($amount > $this->MaximumAmount)) {
+			$form->sessionMessage(_t("AnyPriceProductPage.ERRORINFORMTOOHIGH", "Please enter a lower amount."), "bad");
+			Director::redirectBack();
+			return;
+		}
+		Session::clear("AnyPriceProductPageAmount");
+		$alreadyExistingVariations = DataObject::get_one("ProductVariation", "\"ProductID\" = ".$this->ID." AND \"Price\" = ".$amount);
 		//create new one if needed
 		if(!$alreadyExistingVariations) {
 			Currency::setCurrencySymbol(Payment::site_currency());
 			$titleDescriptor = new Currency("titleDescriptor");
 			$titleDescriptor->setValue($amount);
 			$obj = new ProductVariation();
-			$obj->Title = "Payment for: ".$titleDescriptor->Nice();
+			$obj->Title = _t("AnyPriceProductPage.PAYMENTFOR", "Payment for: ").$titleDescriptor->Nice();
 			$obj->Price = $amount;
 			$obj->ProductID = $this->ID;
 			$obj->writeToStage("Stage");
@@ -132,18 +144,48 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 			//$componentSet->add($obj);
 		}
 		//check if we have one now
-		$ourVariation = DataObject::get_one("ProductVariation", "{$bt}ProductID{$bt} = ".$this->ID." AND {$bt}Price{$bt} = ".$amount);
+		$ourVariation = DataObject::get_one("ProductVariation", "\"ProductID\" = ".$this->ID." AND \"Price\" = ".$amount);
 		if($ourVariation) {
-			ShoppingCart::add_new_item(new ProductVariation_OrderItem($ourVariation));
+			$shoppingCart = ShoppingCart::singleton();
+			$shoppingCart->addBuyable($ourVariation);
 		}
 		else {
-			die("no count");
+			$form->sessionMessage(_t("AnyPriceProductPage.ERROROTHER", "Sorry, we could not add our entry."), "bad");
+			Director::redirectBack();
+			return;
 		}
 		$checkoutPage = DataObject::get_one("CheckoutPage");
 		if($checkoutPage) {
 			Director::redirect($checkoutPage->Link());
 		}
 		return;
+	}
+
+	function setamount($request) {
+		if($amount = floatval($request->param("ID"))) {
+			Session::set("AnyPriceProductPageAmount", $amount);
+		}
+		Director::redirect($this->Link());
+		return array();
+	}
+
+	protected function parseFloat($floatString){
+		//hack to clean up currency symbols, etc....
+		$LocaleInfo = localeconv();
+		$floatString = str_replace($LocaleInfo["mon_decimal_point"] , ".", $floatString);
+		$titleDescriptor = new Currency("titleDescriptor");
+		$titleDescriptor->setValue(1111111);
+		$titleDescriptorString = $titleDescriptor->Nice();
+		$titleDescriptorString = str_replace("1", "", $titleDescriptorString);
+		//HACK!
+		$titleDescriptorString = str_replace(".00", "", $titleDescriptorString);
+		for($i = 0; $i < strlen($titleDescriptorString); $i++){
+			$char =substr($titleDescriptorString, $i, 1);
+			if($char != $LocaleInfo["mon_decimal_point"]) {
+				$floatString = str_replace($char, "", $floatString);
+			}
+		}
+		return round(floatval($floatString - 0), 2);
 	}
 
 }
