@@ -24,7 +24,7 @@ class AnyPriceProductPage extends Product {
 		"ActionFieldLabel" => "Add to cart",
 		"MinimumAmount" => 1,
 		"MaximumAmount" => 100,
-		"AllowPurchase" => true,
+		"AllowPurchase" => false,
 		"Price" => 0
 	);
 
@@ -32,8 +32,12 @@ class AnyPriceProductPage extends Product {
 
 	static $icon = 'ecommerce_anypriceproduct/images/treeicons/AnyPriceProductPage';
 
-	function canCreate() {
+	function canCreate($member = null) {
 		return !DataObject::get_one("SiteTree", "ClassName = 'AnyPriceProductPage'");
+	}
+
+	function canPurchase() {
+		return true;
 	}
 
 	function getCMSFields() {
@@ -70,19 +74,6 @@ class AnyPriceProductPage extends Product {
 		return $fields;
 	}
 
-
-	/**
-	 * Conditions for whether a product can be purchased.
-	 *
-	 * If it has the checkbox for 'Allow this product to be purchased',
-	 * as well as having a price, it can be purchased. Otherwise a user
-	 * can't buy it.
-	 *
-	 * @return boolean
-	 */
-	function AllowPurchase() {
-		return false ;
-	}
 
 
 }
@@ -138,6 +129,7 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 			$obj = new ProductVariation();
 			$obj->Title = _t("AnyPriceProductPage.PAYMENTFOR", "Payment for: ").$titleDescriptor->Nice();
 			$obj->Price = $amount;
+			$obj->AllowPurchase = true;
 			$obj->ProductID = $this->ID;
 			$obj->writeToStage("Stage");
 			// line below does not work - suspected bug in Sapphire Versioning System
