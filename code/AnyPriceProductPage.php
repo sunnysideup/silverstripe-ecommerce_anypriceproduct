@@ -28,7 +28,11 @@ class AnyPriceProductPage extends Product {
 		"Price" => 0
 	);
 
-	static $add_action = 'Adjustable Price Product';
+	public static $singular_name = "Any Price Product";
+		function i18n_singular_name() { return _t("AnyPriceProductPage.ANYPRICEPRODUCT", "Any Price Product");}
+
+	public static $plural_name = "Any Price Products";
+		function i18n_plural_name() { return _t("AnyPriceProductPage.ANYPRICEPRODUCT", "Any Price Products");}
 
 	static $icon = 'ecommerce_anypriceproduct/images/treeicons/AnyPriceProductPage';
 
