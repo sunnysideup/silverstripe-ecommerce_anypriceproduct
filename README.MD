@@ -3,19 +3,29 @@ Ecommerce Any Price Product
 Pre 0.1 proof of concept
 ###############################################
 
-Developer
+This module adds a "product" to e-commerce where
+the customer can determine the price of the product.
+
+A typical example of this would be a "donation" product.
+
+Developers
 -----------------------------------------------
-Nicolaas [at] sunnysideup.co.nz
+Nicolaas Francken [at] sunnysideup.co.nz
+
 
 Requirements
 -----------------------------------------------
-SilverStripe 2.3.0 or greater.
+Ecommerce 1.0+ / SSU Branch
+ecommerce_product_variation
+SilverStripe 2.4+
 
-Documentation
+Project Home
 -----------------------------------------------
-see:
- http://silverstripe-webdevelopment.com/ecommerceanypriceproduct
+See http://code.google.com/p/silverstripe-ecommerce
 
+Demo
+-----------------------------------------------
+See http://www.silverstripe-ecommerce.com
 
 Installation Instructions
 -----------------------------------------------
@@ -25,7 +35,9 @@ into mysite/_config.php file and edit settings as required.
 NB. the idea is not to edit the module at all, but instead customise
 it from your mysite folder, so that you can upgrade the module without redoing the settings.
 
-
 If you just want one or two things from this module
 then of course you are free to copy them to your
 mysite folder and delete the rest of this module.
+
+
+
