@@ -1,8 +1,10 @@
 <div id="Sidebar">
+	<div class="sidebarTop"></div>
 	<% include Sidebar_Cart %>
 	<% include Sidebar_Products %>
+	<div class="sidebarBottom"></div>
 </div>
-<div id="Product">
+<div id="Product" class="mainSection">
 	<h1 class="pageTitle">$Title</h1>
 	<div class="productDetails">
 		<div class="productImage">
