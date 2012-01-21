@@ -203,7 +203,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 *
 	 **/
 	protected function LiveName() {
-		if($this->OtherValue) {
+		if($this->OtherValue > 0) {
 			return _t("AnyPriceRoundUpDonationModifier.DONATION", "Donation");
 		}
 		elseif($this->hasDonation()) {
