@@ -46,15 +46,17 @@ class AnyPriceProductPage extends Product {
 
 	function getCMSFields() {
 		$fields = parent::getCMSFields();
+		$exampleLink = Director::absoluteURL($this->Link("setamount"))."/123.45";
+		$exampleLinkExplanation = sprintf(_t("AnyPriceProductPage.EXPLANATION", '<br /><br /><h5>How to preset the amount?</h5><p>The link <a href="%1$s">%1$s</a> will pre-set the amount to 123.45. You can use this link (and vary the amount as needed) to cutomers to receive payments.</p>.'), $exampleLink);
 		$fields->addFieldsToTab(
 			"Root.Content.AddAmountForm",
 			array(
 				new TextField("AmountFieldLabel", "Amount Field Label (what amount would you like to pay?)"),
 				new TextField("ActionFieldLabel", "Action Field Label (e.g. pay entered amount now)"),
 				new CurrencyField("MinimumAmount", "Minimum Amount"),
-				new CurrencyField("MaximumAmount", "Maximum Amount")
+				new CurrencyField("MaximumAmount", "Maximum Amount"),
+				new LiteralField("ExampleLinkExplanation", $exampleLinkExplanation)
 			)
-
 		);
 		// Standard product detail fields
 		$fields->removeFieldsFromTab(
