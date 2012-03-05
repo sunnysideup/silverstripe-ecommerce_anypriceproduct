@@ -319,7 +319,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 
 class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm {
 
-	function __construct($optionalController = null, $name,FieldSet $fields, FieldSet $actions,$optionalValidator = null) {
+	function __construct($optionalController = null, $name, $fields, $actions, $optionalValidator = null) {
 		parent::__construct($optionalController, $name,$fields,$actions,$optionalValidator);
 		Requirements::javascript("ecommerce_anypriceproduct/javascript/AnyPriceRoundUpDonationModifier.js");
 	}
@@ -331,6 +331,7 @@ class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm {
 			if (is_a($modifier, 'AnyPriceRoundUpDonationModifier')) {
 				if(isset($data['AddDonation'])) {
 					$modifier->updateAddDonation(true);
+					$modifier->updateOtherValue(0);
 					$msg = _t("AnyPriceRoundUpDonationModifier.UPDATED", "Round up donation added - THANK YOU.");
 				}
 				else {
@@ -339,7 +340,9 @@ class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm {
 				}
 				if(isset($data['OtherValue'])) {
 					$modifier->updateOtherValue(floatval($data['OtherValue']));
-					$msg = _t("AnyPriceRoundUpDonationModifier.UPDATED", "Added donation - THANK YOU.");
+					if(floatval($data['OtherValue']) > 0) {
+						$msg = _t("AnyPriceRoundUpDonationModifier.UPDATED", "Added donation - THANK YOU.");
+					}
 				}
 				$modifier->write();
 				return ShoppingCart::singleton()->setMessageAndReturn($msg, "good");

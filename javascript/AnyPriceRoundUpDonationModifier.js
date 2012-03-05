@@ -2,6 +2,7 @@
 	$(document).ready(
 		function() {
 			AnyPriceRoundUpDonationModifier.init();
+			AnyPriceRoundUpDonationModifier.hideAndSeekOtherValue();
 		}
 	);
 })(jQuery);
@@ -24,6 +25,9 @@ var AnyPriceRoundUpDonationModifier = {
 		jQuery(AnyPriceRoundUpDonationModifier.formSelector + " " + AnyPriceRoundUpDonationModifier.actionsSelector).hide();
 		jQuery(AnyPriceRoundUpDonationModifier.formSelector+ " input").change(
 			function() {
+				if(jQuery(this).attr("type") == "checkbox") {
+					AnyPriceRoundUpDonationModifier.hideAndSeekOtherValue();
+				};
 				jQuery(AnyPriceRoundUpDonationModifier.formSelector).submit();
 			}
 		);
@@ -39,7 +43,19 @@ var AnyPriceRoundUpDonationModifier = {
 	showResponse: function (responseText, statusText)  {
 		jQuery(AnyPriceRoundUpDonationModifier.formSelector).removeClass(AnyPriceRoundUpDonationModifier.loadingClass);
 		EcomCart.setChanges(responseText);
+	},
+
+	hideAndSeekOtherValue: function(){
+		if(jQuery("input[name='AddDonation']").is(":checked")) {
+			jQuery("#OtherValue").hide();
+			jQuery("#OtherValue input").val(0.00);
+		}
+		else {
+			jQuery("#OtherValue").show();
+		}
 	}
+
+
 
 }
 
