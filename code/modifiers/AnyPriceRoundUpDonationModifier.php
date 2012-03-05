@@ -36,16 +36,12 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	}
 
 	public static $singular_name = "Round Up Donation";
-		function i18n_single_name() { return _t("AnyPriceRoundUpDonationModifier.ROUNDUPDONATION", "Round Up Donation");}
+		function i18n_singular_name() { return _t("AnyPriceRoundUpDonationModifier.ROUNDUPDONATION", "Round Up Donation");}
 
 	public static $plural_name = "Round Up Donations";
 		function i18n_plural_name() { return _t("AnyPriceRoundUpDonationModifier.ROUNDUPDONATIONS", "Round Up Donations");}
 
 // ######################################## *** other (non) static variables (e.g. protected static $special_name_for_something, protected $order)
-
-	protected static $form_header = 'Round Up Total as a Donation';
-		static function set_form_header($s) {self::$form_header = $s;}
-		static function get_form_header() {return self::$form_header;}
 
 
 	/**
@@ -124,18 +120,18 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 * @param Object $controller = Controller object for form
 	 * @return Object - AnyPriceRoundUpDonationModifier
 	 */
-	function getModifierForm($controller) {
+	function getModifierForm($optionalController = null, $optionalValidator = null) {
 		$fields = new FieldSet();
-		$fields->push(new HeaderField('AnyPriceRoundUpDonationModifierHeader', self::get_form_header(), 4));
+		$fields->push($this->headingField());
+		$fields->push($this->descriptionField());
 		$maxRoundUpObject = DBField::create('Currency',self::get_maximum_round_up());
 		$checkFieldTitle = sprintf(_t("AnyPriceRoundUpDonationModifier.ADDDONATION", "Add round up donation (maximum added %s)?"),$maxRoundUpObject->Nice());
 		$fields->push(new CheckboxField('AddDonation', $checkFieldTitle, $this->AddDonation));
 		$fields->push(new NumericFIeld('OtherValue', _t("AnyPriceRoundUpDonationModifier.OTHERVALUE", "Other Value"), $this->OtherValue));
-		$validator = null;
 		$actions = new FieldSet(
 			new FormAction('submit', 'Update Order')
 		);
-		return new AnyPriceRoundUpDonationModifier_Form($controller, 'AnyPriceRoundUpDonationModifier', $fields, $actions, $validator);
+		return new AnyPriceRoundUpDonationModifier_Form($optionalController, 'AnyPriceRoundUpDonationModifier', $fields, $actions, $optionalValidator);
 	}
 
 // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
@@ -323,8 +319,8 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 
 class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm {
 
-	function __construct($optionalController = null, $name,FieldSet $fields, FieldSet $actions,$validator = null) {
-		parent::__construct($optionalController, $name,$fields,$actions,$validator);
+	function __construct($optionalController = null, $name,FieldSet $fields, FieldSet $actions,$optionalValidator = null) {
+		parent::__construct($optionalController, $name,$fields,$actions,$optionalValidator);
 		Requirements::javascript("ecommerce_anypriceproduct/javascript/AnyPriceRoundUpDonationModifier.js");
 	}
 
