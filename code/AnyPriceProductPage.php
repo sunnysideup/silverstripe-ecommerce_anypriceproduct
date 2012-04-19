@@ -40,7 +40,7 @@ class AnyPriceProductPage extends Product {
 		return !DataObject::get_one("SiteTree", "ClassName = 'AnyPriceProductPage'");
 	}
 
-	function canPurchase() {
+	function canPurchase($member = null) {
 		return true;
 	}
 
