@@ -326,25 +326,26 @@ class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm {
 
 	public function submit($data, $form) {
 		$order = ShoppingCart::current_order();
-		$modifiers = $order->Modifiers();
-		foreach($modifiers as $modifier) {
-			if (is_a($modifier, 'AnyPriceRoundUpDonationModifier')) {
-				if(isset($data['AddDonation'])) {
-					$modifier->updateAddDonation(true);
-					$modifier->updateOtherValue(0);
-					$msg = _t("AnyPriceRoundUpDonationModifier.UPDATED", "Round up donation added - THANK YOU.");
-				}
-				else {
-					$modifier->updateAddDonation(false);
-					$msg = _t("AnyPriceRoundUpDonationModifier.UPDATED", "Round up donation removed.");
-				}
-				if(isset($data['OtherValue'])) {
-					$modifier->updateOtherValue(floatval($data['OtherValue']));
-					if(floatval($data['OtherValue']) > 0) {
-						$msg = _t("AnyPriceRoundUpDonationModifier.UPDATED", "Added donation - THANK YOU.");
+		if($order) {
+			if($modifiers = $order->Modifiers("AnyPriceRoundUpDonationModifier")) {
+				foreach($modifiers as $modifier) {
+					if(isset($data['AddDonation'])) {
+						$modifier->updateAddDonation(true);
+						$modifier->updateOtherValue(0);
+						$msg .= _t("AnyPriceRoundUpDonationModifier.UPDATED", "Round up donation added - THANK YOU.");
 					}
+					else {
+						$modifier->updateAddDonation(false);
+						$msg .= _t("AnyPriceRoundUpDonationModifier.UPDATED", "Round up donation removed.");
+					}
+					if(isset($data['OtherValue'])) {
+						$modifier->updateOtherValue(floatval($data['OtherValue']));
+						if(floatval($data['OtherValue']) > 0) {
+							$msg .= _t("AnyPriceRoundUpDonationModifier.UPDATED", "Added donation - THANK YOU.");
+						}
+					}
+					$modifier->write();
 				}
-				$modifier->write();
 				return ShoppingCart::singleton()->setMessageAndReturn($msg, "good");
 			}
 		}
