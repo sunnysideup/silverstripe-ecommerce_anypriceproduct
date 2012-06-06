@@ -53,8 +53,8 @@ class AnyPriceProductPage extends Product {
 			array(
 				new TextField("AmountFieldLabel", "Amount Field Label (what amount would you like to pay?)"),
 				new TextField("ActionFieldLabel", "Action Field Label (e.g. pay entered amount now)"),
-				new CurrencyField("MinimumAmount", "Minimum Amount"),
-				new CurrencyField("MaximumAmount", "Maximum Amount"),
+				new NumericField("MinimumAmount", "Minimum Amount"),
+				new NumericField("MaximumAmount", "Maximum Amount"),
 				new LiteralField("ExampleLinkExplanation", $exampleLinkExplanation)
 			)
 		);

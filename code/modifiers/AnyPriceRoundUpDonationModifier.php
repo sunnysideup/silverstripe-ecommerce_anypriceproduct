@@ -253,10 +253,10 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 					foreach($modifiers as $modifier) {
 						if(!$modifier->IsRemoved()) { //we just doubledouble-check this...
 							if($modifier instanceOf $this->ClassName) {
-								//do nothing
+								$totalForModifier = 0;
 							}
 							else {
-								$totalForModifier = $modifier->CalculationTotal();
+								$totalForModifier += $modifier->CalculationTotal();
 							}
 							$modifiersTotal += floatval($totalForModifier);
 						}
