@@ -256,7 +256,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 								$totalForModifier = 0;
 							}
 							else {
-								$totalForModifier += $modifier->CalculationTotal();
+								$totalForModifier = $modifier->CalculationTotal();
 							}
 							$modifiersTotal += floatval($totalForModifier);
 						}
@@ -328,6 +328,7 @@ class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm {
 		$order = ShoppingCart::current_order();
 		if($order) {
 			if($modifiers = $order->Modifiers("AnyPriceRoundUpDonationModifier")) {
+				$msg = "";
 				foreach($modifiers as $modifier) {
 					if(isset($data['AddDonation'])) {
 						$modifier->updateAddDonation(true);
