@@ -138,7 +138,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 
 
 	public function ShowInTable() {
-		return true;
+		return $this->hasDonation();
 	}
 
 	public function CanBeRemoved() {
