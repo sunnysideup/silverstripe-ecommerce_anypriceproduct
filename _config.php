@@ -11,7 +11,14 @@
 //===================---------------- START ecommerce_anypriceproduct MODULE ----------------===================
 
 // MUST SET (if you would like to use the AnyPriceRoundUpDonationModifier)
-//Order::add_modifier("AnyPriceRoundUpDonationModifier"); // OR //Order::set_modifiers(array("AnyPriceRoundUpDonationModifier"));
+/**
+ * ADD TO ECOMMERCE.YAML:
+Order:
+	modifiers: [
+		...
+		AnyPriceRoundUpDonationModifier
+	]
+*/
 
 // MAY SET (as part of the AnyPriceRoundUpDonationModifier)
 //AnyPriceRoundUpDonationModifier::set_precision(1);
