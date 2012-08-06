@@ -1,20 +1,9 @@
-<div id="Sidebar">
-	<div class="sidebarTop"></div>
-	<% include Sidebar_Cart %>
-	<% include Sidebar_Products %>
-	<div class="sidebarBottom"></div>
-</div>
-<div id="Product" class="mainSection">
+<div id="Product" class="mainSection content-container withSidebar">
 	<h1 class="pageTitle">$Title</h1>
 	<div class="productDetails">
-		<div class="productImage">
-<% if Image.ContentImage %>
-			<img class="realImage" src="$Image.ContentImage.URL" alt="<% sprintf(_t("Product.IMAGE","%s image"),$Title) %>" />
-<% else %>
-			<img class="noImage" src="/ecommerce/images/productPlaceHolderThumbnail.gif" alt="<% _t("Product.NOIMAGEAVAILABLE","no image available") %>">
-<% end_if %>
-		</div>
-		<div id="AddNewPriceForm">$AddNewPriceForm</div>
+<% include ProductImage %>
+	<div id="AddNewPriceForm">$AddNewPriceForm</div>
+<% include ProductActions %>
 	</div>
 	<% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 <% include OtherProductInfo %>
@@ -22,6 +11,15 @@
 	<% if PageComments %><div id="PageCommentsHolder">$PageComments</div><% end_if %>
 </div>
 
-
-
+<aside>
+	<div id="Sidebar">
+		<div class="sidebarTop"></div>
+		<% include Sidebar_PreviousAndNextProduct %>
+		<% include Sidebar_Cart %>
+		<% include Sidebar %>
+		<% include Sidebar_Currency %>
+		<% include Sidebar_UserAccount %>
+		<div class="sidebarBottom"></div>
+	</div>
+</aside>
 

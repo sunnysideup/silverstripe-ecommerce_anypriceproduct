@@ -16,7 +16,8 @@ class AnyPriceProductPage extends Product {
 		"AmountFieldLabel" => "Varchar(255)",
 		"ActionFieldLabel" => "Varchar(255)",
 		"MinimumAmount" => "Decimal(9,2)",
-		"MaximumAmount" => "Decimal(9,2)"
+		"MaximumAmount" => "Decimal(9,2)",
+		"RecommendedAmounts" => "Varchar(255)"
 	);
 
 	public static $defaults = array(
@@ -55,6 +56,7 @@ class AnyPriceProductPage extends Product {
 				new TextField("ActionFieldLabel", "Action Field Label (e.g. pay entered amount now)"),
 				new NumericField("MinimumAmount", "Minimum Amount"),
 				new NumericField("MaximumAmount", "Maximum Amount"),
+				new TextField("RecommendedAmounts", "Hinted amounts, separated by commas (e.g. <i>5,10,100</i>)"),
 				new LiteralField("ExampleLinkExplanation", $exampleLinkExplanation)
 			)
 		);
@@ -184,6 +186,23 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 			}
 		}
 		return round(floatval($floatString - 0), 2);
+	}
+
+	function Variations(){
+		$options = explode(",", $this->RecommendedAmounts);
+		if(is_array($options)  && count($options)) {
+			foreach($options as $key => $option) {
+				if(!$option) {
+					unset($options[$key]);
+				}
+			}
+		}
+		if(is_array($options)  && count($options)) {
+			return DataObject::get("ProductVariation", "\"ProductID\" = ".$this->ID." AND \"Price\" IN (".implode(",", $options).")");
+		}
+		elseif(floatval($options) == $options){
+			return DataObject::get("ProductVariation", "\"ProductID\" = ".$this->ID." AND \"Price\" = ".floatval($options).")");
+		}
 	}
 
 }
