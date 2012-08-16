@@ -111,6 +111,12 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 * Should we show a form in the checkout page for this modifier?
 	 */
 	public function showForm() {
+		$ajaxObject = $this->AJAXDefinitions();
+		//TableValue is a database value
+		$tableID = $ajaxObject->TableID();
+		if(!$this->hasDonation()) {
+			Requirements::customScript("jQuery(document).ready(function() {jQuery(\"#".$tableID."\").hide();});", "hide$tableID");
+		}
 		return $this->Order()->Items();
 	}
 
@@ -137,10 +143,18 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
 
 
+	/**
+	 * This has to be set to true, because it can be added by form using AJAX.
+	 * @return Boolean
+	 */
 	public function ShowInTable() {
-		return $this->hasDonation();
+		return true;
 	}
 
+	/**
+	 * Removed via form instead.
+	 * @return Boolean
+	 */
 	public function CanBeRemoved() {
 		return false;
 	}
