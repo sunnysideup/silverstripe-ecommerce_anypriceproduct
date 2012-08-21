@@ -89,7 +89,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 * @param Boolean $b
 	 */
 	public function updateAddDonation($b) {
-		$this->AddDonation = $b;
+		$this->AddDonation = $b ? 1 : 0;
 		$this->write();
 	}
 
@@ -345,7 +345,6 @@ class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm {
 				foreach($modifiers as $modifier) {
 					if(isset($data['AddDonation'])) {
 						$modifier->updateAddDonation(true);
-						$modifier->updateOtherValue(0);
 						$msg .= _t("AnyPriceRoundUpDonationModifier.UPDATED", "Round up donation added - THANK YOU.");
 					}
 					else {
@@ -357,6 +356,9 @@ class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm {
 						if(floatval($data['OtherValue']) > 0) {
 							$msg .= _t("AnyPriceRoundUpDonationModifier.UPDATED", "Added donation - THANK YOU.");
 						}
+					}
+					else {
+						$modifier->updateOtherValue(0);
 					}
 					$modifier->write();
 				}
