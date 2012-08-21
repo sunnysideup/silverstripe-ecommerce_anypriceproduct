@@ -11,7 +11,6 @@
  * from the total without the donation and then add it to the donation
  * to get to a round numer.
  *
- * ASSUMPTION: there is no tax payable on the donation.
  */
 class AnyPriceRoundUpDonationModifier extends OrderModifier {
 
