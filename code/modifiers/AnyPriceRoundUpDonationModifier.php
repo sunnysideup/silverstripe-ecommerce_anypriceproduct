@@ -109,13 +109,13 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 * standard OrderModifier Method
 	 * Should we show a form in the checkout page for this modifier?
 	 */
-	public function showForm() {
-		$ajaxObject = $this->AJAXDefinitions();
+	public function ShowForm() {
+		/*$ajaxObject = $this->AJAXDefinitions();
 		//TableValue is a database value
 		$tableID = $ajaxObject->TableID();
 		if(!$this->hasDonation()) {
 			Requirements::customScript("jQuery(document).ready(function() {jQuery(\"#".$tableID."\").hide();});", "hide$tableID");
-		}
+		}*/
 		return $this->Order()->Items();
 	}
 
