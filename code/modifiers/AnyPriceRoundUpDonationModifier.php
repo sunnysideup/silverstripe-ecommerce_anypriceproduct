@@ -65,6 +65,12 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 		static function set_maximum_round_up($i) {self::$maximum_round_up = $i;}
 		static function get_maximum_round_up() {return self::$maximum_round_up;}
 
+	static $use_dropdown_in_modifier_form = false;
+
+	protected static $include_form_in_order_table = true;
+		static function set_include_form_in_order_table($b) {self::$include_form_in_order_table = $b;}
+		static function get_include_form_in_order_table() {return self::$include_form_in_order_table;}
+
 // ######################################## *** CRUD functions (e.g. canEdit)
 // ######################################## *** init and update functions
 
@@ -118,6 +124,15 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 		}*/
 		return $this->Order()->Items();
 	}
+	
+	/**
+	 * Should the form be included in the editable form
+	 * on the checkout page?
+	 * @return Boolean
+	 */
+	public function ShowFormInEditableOrderTable() {
+		return ($this->ShowForm() && self::$include_form_in_order_table) ? true : false;
+	}
 
 	/**
 	 * standard OrderModifier Method
@@ -131,7 +146,8 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 		$fields->push($this->descriptionField());
 		$maxRoundUpObject = DBField::create('Currency',self::get_maximum_round_up());
 		$checkFieldTitle = sprintf(_t("AnyPriceRoundUpDonationModifier.ADDDONATION", "Add round up donation (maximum added %s)?"),$maxRoundUpObject->Nice());
-		$fields->push(new CheckboxField('AddDonation', $checkFieldTitle, $this->AddDonation));
+		$field = self::$use_dropdown_in_modifier_form ? new DropdownField('AddDonation', $checkFieldTitle, array(sprintf(_t("AnyPriceRoundUpDonationModifier.NO", 'No'), $maxRoundUpObject->Nice()), sprintf(_t("AnyPriceRoundUpDonationModifier.YES", 'Yes'),$maxRoundUpObject->Nice())), $this->AddDonation) : new CheckboxField('AddDonation', $checkFieldTitle, $this->AddDonation);
+		$fields->push($field);
 		$fields->push(new NumericFIeld('OtherValue', _t("AnyPriceRoundUpDonationModifier.OTHERVALUE", "Other Value"), $this->OtherValue));
 		$actions = new FieldSet(
 			new FormAction('submit', 'Update Order')
@@ -299,7 +315,11 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 
 // ######################################## *** Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)
 
+	static $table_sub_title;
 
+	function getTableSubTitle() {
+		return _t('AnyPriceRoundUpDonationModifier.TABLESUBTITLE', $this->stat('table_sub_title'));
+	}
 
 // ######################################## *** standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
 
@@ -321,7 +341,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 			return true;
 		}
 		// we do NOT hide it if values have been entered
-		if($this->hasDonation()) {
+		if($this->hasDonation() || $this->ShowFormInEditableOrderTable()) {
 			return false;
 		}
 		return true;
@@ -343,7 +363,7 @@ class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm {
 			if($modifiers = $order->Modifiers("AnyPriceRoundUpDonationModifier")) {
 				$msg = "";
 				foreach($modifiers as $modifier) {
-					if(isset($data['AddDonation'])) {
+					if(isset($data['AddDonation']) && $data['AddDonation']) {
 						$modifier->updateAddDonation(true);
 						$msg .= _t("AnyPriceRoundUpDonationModifier.UPDATED", "Round up donation added - THANK YOU.");
 					}
