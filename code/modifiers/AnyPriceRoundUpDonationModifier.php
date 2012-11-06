@@ -65,7 +65,9 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 		static function set_maximum_round_up($i) {self::$maximum_round_up = $i;}
 		static function get_maximum_round_up() {return self::$maximum_round_up;}
 
-	static $use_dropdown_in_modifier_form = false;
+	protected static $use_dropdown_in_modifier_form = false;
+		static function set_use_dropdown_in_modifier_form($b) {self::$use_dropdown_in_modifier_form = $b;}
+		static function get_use_dropdown_in_modifier_form() {return self::$use_dropdown_in_modifier_form;}
 
 	protected static $include_form_in_order_table = true;
 		static function set_include_form_in_order_table($b) {self::$include_form_in_order_table = $b;}
@@ -124,7 +126,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 		}*/
 		return $this->Order()->Items();
 	}
-	
+
 	/**
 	 * Should the form be included in the editable form
 	 * on the checkout page?
