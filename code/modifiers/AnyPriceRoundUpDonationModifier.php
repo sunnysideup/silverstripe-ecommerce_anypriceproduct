@@ -147,9 +147,25 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 		$fields->push($this->headingField());
 		$fields->push($this->descriptionField());
 		$maxRoundUpObject = DBField::create('Currency',self::get_maximum_round_up());
-		$checkFieldTitle = sprintf(_t("AnyPriceRoundUpDonationModifier.ADDDONATION", "Add round up donation (maximum added %s)?"),$maxRoundUpObject->Nice());
-		$field = self::$use_dropdown_in_modifier_form ? new DropdownField('AddDonation', $checkFieldTitle, array(sprintf(_t("AnyPriceRoundUpDonationModifier.NO", 'No'), $maxRoundUpObject->Nice()), sprintf(_t("AnyPriceRoundUpDonationModifier.YES", 'Yes'),$maxRoundUpObject->Nice())), $this->AddDonation) : new CheckboxField('AddDonation', $checkFieldTitle, $this->AddDonation);
-		$fields->push($field);
+		$checkFieldTitle = sprintf(
+			_t("AnyPriceRoundUpDonationModifier.ADDDONATION", "Add round up donation (maximum added %s)?"),
+			$maxRoundUpObject->Nice()
+		);
+		if(self::$use_dropdown_in_modifier_form) {
+			$checkField = new DropdownField(
+				'AddDonation',
+				$checkFieldTitle,
+				array(
+					_t("AnyPriceRoundUpDonationModifier.NO", 'No'), $maxRoundUpObject->Nice(),
+					_t("AnyPriceRoundUpDonationModifier.YES", 'Yes'),$maxRoundUpObject->Nice()
+				),
+				$this->AddDonation
+			);
+		}
+		else {
+			$checkField = new CheckboxField('AddDonation', $checkFieldTitle, $this->AddDonation);
+		}
+		$fields->push($checkField);
 		$fields->push(new NumericFIeld('OtherValue', _t("AnyPriceRoundUpDonationModifier.OTHERVALUE", "Other Value"), $this->OtherValue));
 		$actions = new FieldSet(
 			new FormAction('submit', 'Update Order')
