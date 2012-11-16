@@ -146,6 +146,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 		$fields = new FieldSet();
 		$fields->push($this->headingField());
 		$fields->push($this->descriptionField());
+		$maxRoundUpObject = DBField::create('Currency',self::get_maximum_round_up());
 		$checkFieldTitle = sprintf(
 			_t("AnyPriceRoundUpDonationModifier.ADDDONATION", "Add round up donation (maximum added %s)?"),
 			$maxRoundUpObject->Nice()
