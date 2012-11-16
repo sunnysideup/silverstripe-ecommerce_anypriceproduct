@@ -9,7 +9,7 @@
 
 var AnyPriceRoundUpDonationModifier = {
 
-	formSelector: "#AnyPriceRoundUpDonationModifier_Form_AnyPriceRoundUpDonationModifier",
+	formSelector: 'form.anyPriceRoundUpDonationModifier',
 
 	actionsSelector: ".Actions",
 
