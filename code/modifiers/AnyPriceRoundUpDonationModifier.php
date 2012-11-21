@@ -65,6 +65,10 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 		static function set_maximum_round_up($i) {self::$maximum_round_up = $i;}
 		static function get_maximum_round_up() {return self::$maximum_round_up;}
 
+	protected static $round_up_even_if_there_is_nothing_to_round = true;
+		static function set_round_up_even_if_there_is_nothing_to_round($b) {self::$round_up_even_if_there_is_nothing_to_round = $b;}
+		static function get_round_up_even_if_there_is_nothing_to_round() {return self::$round_up_even_if_there_is_nothing_to_round;}
+
 	protected static $use_dropdown_in_modifier_form = false;
 		static function set_use_dropdown_in_modifier_form($b) {self::$use_dropdown_in_modifier_form = $b;}
 		static function get_use_dropdown_in_modifier_form() {return self::$use_dropdown_in_modifier_form;}
@@ -225,6 +229,9 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 				$actualAdditionToTotal = ($roundedTotalMultipliedByPrecision * $precisionMultiplier) - $totalExcludingDonation;
 				while($actualAdditionToTotal > self::get_maximum_round_up() && $actualAdditionToTotal > 0) {
 					$actualAdditionToTotal = $actualAdditionToTotal - self::get_maximum_round_up();
+				}
+				if(self::get_round_up_even_if_there_is_nothing_to_round() && $actualAdditionToTotal == 0) {
+					$actualAdditionToTotal = self::get_maximum_round_up();
 				}
 			}
 		}
