@@ -185,6 +185,9 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 * @return Boolean
 	 */
 	public function ShowInTable() {
+		if($this->Order()->IsSubmitted()) {
+			return $this->TableValue > 0;
+		}
 		return true;
 	}
 
