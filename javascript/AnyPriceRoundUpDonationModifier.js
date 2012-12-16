@@ -15,6 +15,8 @@ var AnyPriceRoundUpDonationModifier = {
 
 	loadingClass: "loading",
 
+	delayedUpdateFN: null,
+
 	init: function() {
 		var options = {
 			beforeSubmit: AnyPriceRoundUpDonationModifier.showRequest,  // pre-submit callback
@@ -25,10 +27,24 @@ var AnyPriceRoundUpDonationModifier = {
 		jQuery(AnyPriceRoundUpDonationModifier.formSelector + " " + AnyPriceRoundUpDonationModifier.actionsSelector).hide();
 		jQuery(AnyPriceRoundUpDonationModifier.formSelector+ " input").change(
 			function() {
+				clearTimeout(AnyPriceRoundUpDonationModifier.delayedUpdateFN);
+				AnyPriceRoundUpDonationModifier.delayedUpdateFN = null;
 				if(jQuery(this).attr("type") == "checkbox") {
 					AnyPriceRoundUpDonationModifier.hideAndSeekOtherValue();
 				};
 				jQuery(AnyPriceRoundUpDonationModifier.formSelector).submit();
+			}
+		);
+		jQuery(AnyPriceRoundUpDonationModifier.formSelector+ " input.text").keyup(
+			function() {
+				clearTimeout(AnyPriceRoundUpDonationModifier.delayedUpdateFN);
+				AnyPriceRoundUpDonationModifier.delayedUpdateFN = window.setTimeout(
+					function() {
+						clearTimeout(AnyPriceRoundUpDonationModifier.delayedUpdateFN);
+						jQuery(AnyPriceRoundUpDonationModifier.formSelector).submit();
+					},
+					2000
+				);
 			}
 		);
 	},
