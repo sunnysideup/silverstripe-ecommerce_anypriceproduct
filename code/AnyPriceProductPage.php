@@ -143,7 +143,6 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 			$obj->AllowPurchase = true;
 			$obj->ProductID = $this->ID;
 			$obj->write("Stage");
-			$obj->writeToStage("Stage");
 			// line below does not work - suspected bug in Sapphire Versioning System
 			//$componentSet->add($obj);
 		}
@@ -218,9 +217,20 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 
 class AnyPriceProductPage_ProductVariation extends ProductVariation {
 
+	/**
+	 *
+	 * @var String
+	 */
+	protected $defaultClassNameForOrderItem = "AnyPriceProductPage_ProductVariationOrderItem";
+
 }
 
 class AnyPriceProductPage_ProductVariationOrderItem extends ProductVariation_OrderItem {
+
+	function onBeforeWrite(){
+		parent::onBeforeWrite();
+		$this->Quantity = 1;
+	}
 
 }
 
