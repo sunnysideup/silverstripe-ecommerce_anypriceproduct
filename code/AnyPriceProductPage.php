@@ -128,26 +128,35 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 			return;
 		}
 		Session::clear("AnyPriceProductPageAmount");
-		$alreadyExistingVariations = DataObject::get_one("ProductVariation", "\"ProductID\" = ".$this->ID." AND \"Price\" = ".$amount);
+		$obj = DataObject::get_one(
+			"AnyPriceProductPage_ProductVariation",
+			"\"ProductID\" = ".$this->ID." AND \"Price\" = ".$amount
+		);
 		//create new one if needed
-		if(!$alreadyExistingVariations) {
+		if(!$obj) {
 			Currency::setCurrencySymbol(Payment::site_currency());
 			$titleDescriptor = new Currency("titleDescriptor");
 			$titleDescriptor->setValue($amount);
-			$obj = new ProductVariation();
+			$obj = new AnyPriceProductPage_ProductVariation();
 			$obj->Title = _t("AnyPriceProductPage.PAYMENTFOR", "Payment for: ").$titleDescriptor->Nice();
 			$obj->Price = $amount;
 			$obj->AllowPurchase = true;
 			$obj->ProductID = $this->ID;
+			$obj->write("Stage");
 			$obj->writeToStage("Stage");
 			// line below does not work - suspected bug in Sapphire Versioning System
 			//$componentSet->add($obj);
 		}
 		//check if we have one now
-		$ourVariation = DataObject::get_one("ProductVariation", "\"ProductID\" = ".$this->ID." AND \"Price\" = ".$amount);
-		if($ourVariation) {
+		if(!$obj) {
+			$obj = DataObject::get_one(
+				"AnyPriceProductPage_ProductVariation",
+				"\"ProductID\" = ".$this->ID." AND \"Price\" = ".$amount
+			);
+		}
+		if($obj) {
 			$shoppingCart = ShoppingCart::singleton();
-			$shoppingCart->addBuyable($ourVariation);
+			$shoppingCart->addBuyable($obj);
 		}
 		else {
 			$form->sessionMessage(_t("AnyPriceProductPage.ERROROTHER", "Sorry, we could not add our entry."), "bad");
@@ -198,11 +207,20 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 			}
 		}
 		if(is_array($options)  && count($options)) {
-			return DataObject::get("ProductVariation", "\"ProductID\" = ".$this->ID." AND \"Price\" IN (".implode(",", $options).")");
+			return DataObject::get("AnyPriceProductPage_ProductVariation", "\"ProductID\" = ".$this->ID." AND \"Price\" IN (".implode(",", $options).")");
 		}
 		elseif(floatval($options) == $options){
-			return DataObject::get("ProductVariation", "\"ProductID\" = ".$this->ID." AND \"Price\" = ".floatval($options).")");
+			return DataObject::get("AnyPriceProductPage_ProductVariation", "\"ProductID\" = ".$this->ID." AND \"Price\" = ".floatval($options).")");
 		}
 	}
 
 }
+
+class AnyPriceProductPage_ProductVariation extends ProductVariation {
+
+}
+
+class AnyPriceProductPage_ProductVariationOrderItem extends ProductVariation_OrderItem {
+
+}
+
