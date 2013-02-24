@@ -404,7 +404,8 @@ class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm {
 					if(isset($data['OtherValue'])) {
 						$modifier->updateOtherValue(floatval($data['OtherValue']));
 						if(floatval($data['OtherValue']) > 0) {
-							$msg .= _t("AnyPriceRoundUpDonationModifier.UPDATED", "Added donation - THANK YOU.");
+							//here we replace the message!
+							$msg = _t("AnyPriceRoundUpDonationModifier.UPDATED", "Added donation - THANK YOU.");
 						}
 					}
 					else {
