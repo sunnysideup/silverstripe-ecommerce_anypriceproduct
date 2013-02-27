@@ -1,5 +1,5 @@
 {
-	"name": "silverstripe/ecommerce_anypriceproduct",
+	"name": "sunnysideup/ecommerce_anypriceproduct",
 	"type": "silverstripe-module",
 	"description": "add a 'donation' or 'any price' product to your silverstripe e-commerce ",
 	"homepage": "http://www.silverstripe-ecommerce.com",
