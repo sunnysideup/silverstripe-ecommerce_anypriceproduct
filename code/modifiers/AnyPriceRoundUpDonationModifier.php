@@ -399,13 +399,13 @@ class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm {
 					}
 					else {
 						$modifier->updateAddDonation(false);
-						$msg .= _t("AnyPriceRoundUpDonationModifier.UPDATED", "Round up donation removed.");
+						$msg .= _t("AnyPriceRoundUpDonationModifier.REMOVED", "Round up donation removed.");
 					}
 					if(isset($data['OtherValue'])) {
 						$modifier->updateOtherValue(floatval($data['OtherValue']));
 						if(floatval($data['OtherValue']) > 0) {
 							//here we replace the message!
-							$msg = _t("AnyPriceRoundUpDonationModifier.UPDATED", "Added donation - THANK YOU.");
+							$msg = _t("AnyPriceRoundUpDonationModifier.UPDATED_OTHER", "Added donation - THANK YOU.");
 						}
 					}
 					else {
