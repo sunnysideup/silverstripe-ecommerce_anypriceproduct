@@ -8,19 +8,20 @@ class DonationModifier extends AnyPriceRoundUpDonationModifier {
 
 	function getModifierForm($optionalController = null, $optionalValidator = null) {
 		$form = parent::getModifierForm($optionalController, $optionalValidator);
-		$donations = DataObject::get('DonationOption');
+		$donations = DonationOption::get();
 		$fields = $form->Fields();
-		if($donations) {
+		if($donations->count()) {
 			$field = $fields->fieldByName('AddDonation');
 			$title = $field->Title();
 			$source = $field->getSource();
 			$fields->removeByName('AddDonation');
 			unset($source[1]);
-			$donations = $donations->map();
+			$donations = $donations->map()->toArray();
 			$source += $donations;
 			$fields->push(new DropdownField('DonationID', $title, $source, $this->DonationID));
 		}
 		$form = new DonationModifier_Form($form->Controller(), 'DonationModifier', $fields, $form->Actions(), $form->getValidator());
+		//3.0TODO: Check me for consistencies.
 		$form->addExtraClass('anyPriceRoundUpDonationModifier');
 		return $form;
 	}

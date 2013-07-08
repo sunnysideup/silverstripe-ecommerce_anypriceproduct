@@ -38,7 +38,7 @@ class AnyPriceProductPage extends Product {
 	static $icon = 'ecommerce_anypriceproduct/images/treeicons/AnyPriceProductPage';
 
 	function canCreate($member = null) {
-		return !DataObject::get_one("SiteTree", "ClassName = 'AnyPriceProductPage'");
+		return !SiteTree::get()->filter(array("ClassName" => 'AnyPriceProductPage'))->count();
 	}
 
 	function canPurchase($member = null) {
@@ -50,7 +50,7 @@ class AnyPriceProductPage extends Product {
 		$exampleLink = Director::absoluteURL($this->Link("setamount"))."/123.45";
 		$exampleLinkExplanation = sprintf(_t("AnyPriceProductPage.EXPLANATION", '<br /><br /><h5>How to preset the amount?</h5><p>The link <a href="%1$s">%1$s</a> will pre-set the amount to 123.45. You can use this link (and vary the amount as needed) to cutomers to receive payments.</p>.'), $exampleLink);
 		$fields->addFieldsToTab(
-			"Root.Content.AddAmountForm",
+			"Root.AddAmountForm",
 			array(
 				new TextField("AmountFieldLabel", "Amount Field Label (what amount would you like to pay?)"),
 				new TextField("ActionFieldLabel", "Action Field Label (e.g. pay entered amount now)"),
@@ -62,7 +62,7 @@ class AnyPriceProductPage extends Product {
 		);
 		// Standard product detail fields
 		$fields->removeFieldsFromTab(
-			'Root.Content.Main',
+			'Root.Main',
 			array(
 				'Weight',
 				'Price',
@@ -73,7 +73,7 @@ class AnyPriceProductPage extends Product {
 
 		// Flags for this product which affect it's behaviour on the site
 		$fields->removeFieldsFromTab(
-			'Root.Content.Main',
+			'Root.Main',
 			array(
 				'FeaturedProduct'
 			)
@@ -97,11 +97,11 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 		if($newAmount = Session::get("AnyPriceProductPageAmount")) {
 			$amount = $newAmount;
 		}
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			new CurrencyField("Amount", $this->AmountFieldLabel, $amount)
 		);
 
-		$actions = new FieldSet(
+		$actions = new FieldList(
 			new FormAction("doAddNewPriceForm", $this->ActionFieldLabel)
 		);
 
@@ -119,19 +119,19 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 		$amount = $this->parseFloat($data["Amount"]);
 		if($this->MinimumAmount && ($amount < $this->MinimumAmount)) {
 			$form->sessionMessage(_t("AnyPriceProductPage.ERRORINFORMTOOLOW", "Please enter a higher amount."), "bad");
-			Director::redirectBack();
+			$this->redirectBack();
 			return;
 		}
 		elseif($this->MaximumAmount && ($amount > $this->MaximumAmount)) {
 			$form->sessionMessage(_t("AnyPriceProductPage.ERRORINFORMTOOHIGH", "Please enter a lower amount."), "bad");
-			Director::redirectBack();
+			$this->redirectBack();
 			return;
 		}
 		Session::clear("AnyPriceProductPageAmount");
-		$obj = DataObject::get_one(
-			"AnyPriceProductPage_ProductVariation",
-			"\"ProductID\" = ".$this->ID." AND \"Price\" = ".$amount
-		);
+		$obj = AnyPriceProductPage_ProductVariation::get()->filter(array(
+			"ProductID" => $this->ID,
+			"Price" => $amount
+		))->First();
 		//create new one if needed
 		if(!$obj) {
 			Currency::setCurrencySymbol(Payment::site_currency());
@@ -143,15 +143,15 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 			$obj->AllowPurchase = true;
 			$obj->ProductID = $this->ID;
 			$obj->write("Stage");
-			// line below does not work - suspected bug in Sapphire Versioning System
+			// line below does not work - suspected bug in framework Versioning System
 			//$componentSet->add($obj);
 		}
 		//check if we have one now
 		if(!$obj) {
-			$obj = DataObject::get_one(
-				"AnyPriceProductPage_ProductVariation",
-				"\"ProductID\" = ".$this->ID." AND \"Price\" = ".$amount
-			);
+			$obj = AnyPriceProductPage_ProductVariation::get()->filter(array(
+				"ProductID" => $this->ID,
+				"Price" => $amount
+			))->First();
 		}
 		if($obj) {
 			$shoppingCart = ShoppingCart::singleton();
@@ -159,12 +159,12 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 		}
 		else {
 			$form->sessionMessage(_t("AnyPriceProductPage.ERROROTHER", "Sorry, we could not add our entry."), "bad");
-			Director::redirectBack();
+			$this->redirectBack();
 			return;
 		}
-		$checkoutPage = DataObject::get_one("CheckoutPage");
+		$checkoutPage = CheckoutPage::get()->First();
 		if($checkoutPage) {
-			Director::redirect($checkoutPage->Link());
+			$this->redirect($checkoutPage->Link());
 		}
 		return;
 	}
@@ -173,7 +173,7 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 		if($amount = floatval($request->param("ID"))) {
 			Session::set("AnyPriceProductPageAmount", $amount);
 		}
-		Director::redirect($this->Link());
+		$this->redirect($this->Link());
 		return array();
 	}
 
@@ -206,10 +206,16 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 			}
 		}
 		if(is_array($options)  && count($options)) {
-			return DataObject::get("AnyPriceProductPage_ProductVariation", "\"ProductID\" = ".$this->ID." AND \"Price\" IN (".implode(",", $options).")");
+			return AnyPriceProductPage_ProductVariation::get()->filter(array(
+				"ProductID" => $this->ID,
+				"Price" => $options
+			));
 		}
 		elseif(floatval($options) == $options){
-			return DataObject::get("AnyPriceProductPage_ProductVariation", "\"ProductID\" = ".$this->ID." AND \"Price\" = ".floatval($options).")");
+			return AnyPriceProductPage_ProductVariation::get()->filter(array(
+				"ProductID" => $this->ID,
+				"Price" => floatval($options)
+			));
 		}
 	}
 

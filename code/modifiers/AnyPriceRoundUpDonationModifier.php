@@ -149,10 +149,10 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 * @return Object - AnyPriceRoundUpDonationModifier
 	 */
 	function getModifierForm($optionalController = null, $optionalValidator = null) {
-		$fields = new FieldSet();
+		$fields = new FieldList();
 		$fields->push($this->headingField());
 		$fields->push($this->descriptionField());
-		$maxRoundUpObject = DBField::create('Currency',self::get_maximum_round_up());
+		$maxRoundUpObject = DBField::create_field('Currency',self::get_maximum_round_up());
 		$checkFieldTitle = sprintf(
 			_t("AnyPriceRoundUpDonationModifier.ADDDONATION", "Add round up donation (maximum added %s)?"),
 			$maxRoundUpObject->Nice()
@@ -173,7 +173,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 		}
 		$fields->push($checkField);
 		$fields->push(new NumericFIeld('OtherValue', _t("AnyPriceRoundUpDonationModifier.OTHERVALUE", "Other Value"), $this->OtherValue));
-		$actions = new FieldSet(
+		$actions = new FieldList(
 			new FormAction('submit', 'Update Order')
 		);
 		return new AnyPriceRoundUpDonationModifier_Form($optionalController, 'AnyPriceRoundUpDonationModifier', $fields, $actions, $optionalValidator);
