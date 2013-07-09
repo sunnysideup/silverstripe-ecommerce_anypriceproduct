@@ -41,7 +41,7 @@ class AnyPriceProductPage extends Product {
 		return !SiteTree::get()->filter(array("ClassName" => 'AnyPriceProductPage'))->count();
 	}
 
-	function canPurchase($member = null) {
+	function canPurchase(Member $member = null) {
 		return true;
 	}
 
@@ -134,7 +134,7 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 		))->First();
 		//create new one if needed
 		if(!$obj) {
-			Currency::setCurrencySymbol(Payment::site_currency());
+			Currency::setCurrencySymbol(EcommercePayment::site_currency());
 			$titleDescriptor = new Currency("titleDescriptor");
 			$titleDescriptor->setValue($amount);
 			$obj = new AnyPriceProductPage_ProductVariation();

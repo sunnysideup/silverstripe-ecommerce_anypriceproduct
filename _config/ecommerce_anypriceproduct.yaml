@@ -1,4 +1,4 @@
 AnyPriceRoundUpDonationModifier:
-	precision: 1
-	set_maximum_round_up: 5
+  precision: 1
+  set_maximum_round_up: 5
 

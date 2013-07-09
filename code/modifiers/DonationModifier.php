@@ -6,7 +6,7 @@ class DonationModifier extends AnyPriceRoundUpDonationModifier {
 		'Donation' => 'DonationOption'
 	);
 
-	function getModifierForm($optionalController = null, $optionalValidator = null) {
+	function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null) {
 		$form = parent::getModifierForm($optionalController, $optionalValidator);
 		$donations = DonationOption::get();
 		$fields = $form->Fields();
@@ -44,7 +44,7 @@ class DonationModifier extends AnyPriceRoundUpDonationModifier {
 
 class DonationModifier_Form extends OrderModifierForm {
 
-	public function submit($data, $form) {
+	public function submit(Array $data, Form $form, $message = "order updated", $status = "good") {
 		$order = ShoppingCart::current_order();
 		if($order) {
 			$modifier = $order->Modifiers('DonationModifier');

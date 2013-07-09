@@ -148,7 +148,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 * @param Object $controller = Controller object for form
 	 * @return Object - AnyPriceRoundUpDonationModifier
 	 */
-	function getModifierForm($optionalController = null, $optionalValidator = null) {
+	function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null) {
 		$fields = new FieldList();
 		$fields->push($this->headingField());
 		$fields->push($this->descriptionField());
@@ -387,7 +387,7 @@ class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm {
 		Requirements::javascript("ecommerce_anypriceproduct/javascript/AnyPriceRoundUpDonationModifier.js");
 	}
 
-	public function submit($data, $form) {
+	public function submit(Array $data, Form $form, $message = "order updated", $status = "good") {
 		$order = ShoppingCart::current_order();
 		if($order) {
 			if($modifiers = $order->Modifiers("AnyPriceRoundUpDonationModifier")) {
