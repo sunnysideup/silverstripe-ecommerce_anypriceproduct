@@ -79,18 +79,10 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 * @param Bool $force - run it, even if it has run already
 	 */
 	public function runUpdate($force = false) {
-		if (isset($_GET[' ### UPGRADE_REQUIRED  
-/* Replaced debug_profile
-Comment: $_GET["debug_profile"] removed. 
-###*/debug_profile'])) Profiler::mark('AnyPriceRoundUpDonationModifier::runUpdate');
 		$this->checkField("AddDonation");
 		$this->checkField("OtherValue");
 		$this->checkField("SubTotal");
 		$this->checkField("ModifierTotalExcludingDonation");
-		if (isset($_GET[' ### UPGRADE_REQUIRED  
-/* Replaced debug_profile
-Comment: $_GET["debug_profile"] removed. 
-###*/debug_profile'])) Profiler::unmark('AnyPriceRoundUpDonationModifier::runUpdate');
 		parent::runUpdate($force);
 	}
 
