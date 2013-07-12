@@ -2,7 +2,7 @@
 
 class DonationModifier extends AnyPriceRoundUpDonationModifier {
 
-	static $has_one = array(
+	private static $has_one = array(
 		'Donation' => 'DonationOption'
 	);
 

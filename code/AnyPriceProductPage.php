@@ -12,7 +12,7 @@
 
 class AnyPriceProductPage extends Product {
 
-	public static $db = array(
+	private static $db = array(
 		"AmountFieldLabel" => "Varchar(255)",
 		"ActionFieldLabel" => "Varchar(255)",
 		"MinimumAmount" => "Decimal(9,2)",
@@ -20,7 +20,7 @@ class AnyPriceProductPage extends Product {
 		"RecommendedAmounts" => "Varchar(255)"
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"AmountFieldLabel" => "Enter Amount",
 		"ActionFieldLabel" => "Add to cart",
 		"MinimumAmount" => 1,
@@ -29,13 +29,20 @@ class AnyPriceProductPage extends Product {
 		"Price" => 0
 	);
 
-	public static $singular_name = "Any Price Product";
+	private static $singular_name = "Any Price Product";
 		function i18n_singular_name() { return _t("AnyPriceProductPage.ANYPRICEPRODUCT", "Any Price Product");}
 
-	public static $plural_name = "Any Price Products";
+	private static $plural_name = "Any Price Products";
 		function i18n_plural_name() { return _t("AnyPriceProductPage.ANYPRICEPRODUCT", "Any Price Products");}
 
-	static $icon = 'ecommerce_anypriceproduct/images/treeicons/AnyPriceProductPage';
+	private static $icon = 'ecommerce_anypriceproduct/images/treeicons/AnyPriceProductPage';
+
+	/**
+	 * @config
+	 * @var String Description of the class functionality, typically shown to a user
+	 * when selecting which page type to create. Translated through {@link provideI18nEntities()}.
+	 */
+	private static $description = 'Generic product that can be used to allow customers to choose a specific amount to pay.';
 
 	function canCreate($member = null) {
 		return !SiteTree::get()->filter(array("ClassName" => 'AnyPriceProductPage'))->count();
@@ -87,6 +94,12 @@ class AnyPriceProductPage extends Product {
 }
 
 class AnyPriceProductPage_Controller extends Product_Controller {
+
+	private static $allowed_actions = array(
+		"AddNewPriceForm",
+		"setamount",
+		
+	);
 
 	function init() {
 		parent::init();

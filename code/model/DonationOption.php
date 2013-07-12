@@ -2,7 +2,7 @@
 
 class DonationOption extends DataObject {
 
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar'
 	);
 }

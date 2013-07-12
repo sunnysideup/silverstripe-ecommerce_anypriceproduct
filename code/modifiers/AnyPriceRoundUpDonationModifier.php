@@ -20,7 +20,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 * add extra fields as you need them.
 	 *
 	 **/
-	public static $db = array(
+	private static $db = array(
 		"ModifierTotalExcludingDonation" => "Currency",
 		"SubTotal" => "Currency",
 		"OtherValue" => "Currency",
@@ -34,13 +34,13 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 		return $fields;
 	}
 
-	public static $singular_name = "Round Up Donation";
+	private static $singular_name = "Round Up Donation";
 		function i18n_singular_name() { return _t("AnyPriceRoundUpDonationModifier.ROUNDUPDONATION", "Round Up Donation");}
 
-	public static $plural_name = "Round Up Donations";
+	private static $plural_name = "Round Up Donations";
 		function i18n_plural_name() { return _t("AnyPriceRoundUpDonationModifier.ROUNDUPDONATIONS", "Round Up Donations");}
 
-// ######################################## *** other (non) static variables (e.g. protected static $special_name_for_something, protected $order)
+// ######################################## *** other (non) static variables (e.g. private static $special_name_for_something, protected $order)
 
 
 	/**
@@ -52,30 +52,20 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 *
 	 * @var Int
 	 */
-	protected static $precision = 1;
-		static function set_precision($i) {self::$precision = $i;}
-		static function get_precision() {return self::$precision;}
+	private static $precision = 1;
 
 	/**
 	 * Maximum Round Up - modifier will ensure that the round up is no more
 	 * than the number specified here.
 	 * @var Int
 	 */
-	protected static $maximum_round_up = 5;
-		static function set_maximum_round_up($i) {self::$maximum_round_up = $i;}
-		static function get_maximum_round_up() {return self::$maximum_round_up;}
+	private static $maximum_round_up = 5;
 
-	protected static $round_up_even_if_there_is_nothing_to_round = true;
-		static function set_round_up_even_if_there_is_nothing_to_round($b) {self::$round_up_even_if_there_is_nothing_to_round = $b;}
-		static function get_round_up_even_if_there_is_nothing_to_round() {return self::$round_up_even_if_there_is_nothing_to_round;}
+	private static $round_up_even_if_there_is_nothing_to_round = true;
 
-	protected static $use_dropdown_in_modifier_form = false;
-		static function set_use_dropdown_in_modifier_form($b) {self::$use_dropdown_in_modifier_form = $b;}
-		static function get_use_dropdown_in_modifier_form() {return self::$use_dropdown_in_modifier_form;}
+	private static $use_dropdown_in_modifier_form = false;
 
-	protected static $include_form_in_order_table = true;
-		static function set_include_form_in_order_table($b) {self::$include_form_in_order_table = $b;}
-		static function get_include_form_in_order_table() {return self::$include_form_in_order_table;}
+	private static $include_form_in_order_table = true;
 
 // ######################################## *** CRUD functions (e.g. canEdit)
 // ######################################## *** init and update functions
@@ -89,12 +79,18 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 * @param Bool $force - run it, even if it has run already
 	 */
 	public function runUpdate($force = false) {
-		if (isset($_GET['debug_profile'])) Profiler::mark('AnyPriceRoundUpDonationModifier::runUpdate');
+		if (isset($_GET[' ### UPGRADE_REQUIRED  
+/* Replaced debug_profile
+Comment: $_GET["debug_profile"] removed. 
+###*/debug_profile'])) Profiler::mark('AnyPriceRoundUpDonationModifier::runUpdate');
 		$this->checkField("AddDonation");
 		$this->checkField("OtherValue");
 		$this->checkField("SubTotal");
 		$this->checkField("ModifierTotalExcludingDonation");
-		if (isset($_GET['debug_profile'])) Profiler::unmark('AnyPriceRoundUpDonationModifier::runUpdate');
+		if (isset($_GET[' ### UPGRADE_REQUIRED  
+/* Replaced debug_profile
+Comment: $_GET["debug_profile"] removed. 
+###*/debug_profile'])) Profiler::unmark('AnyPriceRoundUpDonationModifier::runUpdate');
 		parent::runUpdate($force);
 	}
 
@@ -152,7 +148,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 		$fields = new FieldList();
 		$fields->push($this->headingField());
 		$fields->push($this->descriptionField());
-		$maxRoundUpObject = DBField::create_field('Currency',self::get_maximum_round_up());
+		$maxRoundUpObject = DBField::create_field('Currency',Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up'));
 		$checkFieldTitle = sprintf(
 			_t("AnyPriceRoundUpDonationModifier.ADDDONATION", "Add round up donation (maximum added %s)?"),
 			$maxRoundUpObject->Nice()
@@ -210,7 +206,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 	 *@return Boolean
 	 */
 	protected function hasDonation(){
-		if(($this->LiveAddDonation() && self::get_maximum_round_up() > 0) || $this->OtherValue > 0) {
+		if(($this->LiveAddDonation() && Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up') > 0) || $this->OtherValue > 0) {
 			return true;
 		}
 		return false;
@@ -228,15 +224,15 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 			}
 			else {
 				$totalExcludingDonation = $this->LiveSubTotal() + $this->LiveModifierTotalExcludingDonation();
-				$precisionMultiplier = pow(10, self::get_precision());
+				$precisionMultiplier = pow(10, Config::inst()->get('AnyPriceRoundUpDonationModifier', 'precision'));
 				$totalMultipliedByPrecision = $totalExcludingDonation / $precisionMultiplier;
 				$roundedTotalMultipliedByPrecision = ceil($totalMultipliedByPrecision);
 				$actualAdditionToTotal = ($roundedTotalMultipliedByPrecision * $precisionMultiplier) - $totalExcludingDonation;
-				while($actualAdditionToTotal > self::get_maximum_round_up() && $actualAdditionToTotal > 0) {
-					$actualAdditionToTotal = $actualAdditionToTotal - self::get_maximum_round_up();
+				while($actualAdditionToTotal > Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up') && $actualAdditionToTotal > 0) {
+					$actualAdditionToTotal = $actualAdditionToTotal - Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up');
 				}
-				if(self::get_round_up_even_if_there_is_nothing_to_round() && $actualAdditionToTotal == 0) {
-					$actualAdditionToTotal = self::get_maximum_round_up();
+				if(Config::inst()->get('AnyPriceRoundUpDonationModifier', 'round_up_even_if_there_is_nothing_to_round') && $actualAdditionToTotal == 0) {
+					$actualAdditionToTotal = Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up');
 				}
 			}
 		}
@@ -345,7 +341,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 
 // ######################################## *** Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)
 
-	static $table_sub_title;
+	private static $table_sub_title;
 
 	function getTableSubTitle() {
 		return _t('AnyPriceRoundUpDonationModifier.TABLESUBTITLE', $this->stat('table_sub_title'));
