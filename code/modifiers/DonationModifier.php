@@ -15,7 +15,7 @@ class DonationModifier extends AnyPriceRoundUpDonationModifier {
 			$title = $field->Title();
 			$source = $field->getSource();
 			$fields->removeByName('AddDonation');
-			unset($source[1]);
+			$source = array(0 => _t("DonationModifier.NO_DONATION", "No thanks"));
 			$donations = $donations->map()->toArray();
 			$source += $donations;
 			$fields->push(new DropdownField('DonationID', $title, $source, $this->DonationID));
