@@ -63,8 +63,6 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 
 	private static $round_up_even_if_there_is_nothing_to_round = true;
 
-	private static $use_dropdown_in_modifier_form = false;
-
 	private static $include_form_in_order_table = true;
 
 // ######################################## *** CRUD functions (e.g. canEdit)
@@ -145,20 +143,15 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier {
 			_t("AnyPriceRoundUpDonationModifier.ADDDONATION", "Add round up donation (maximum added %s)?"),
 			$maxRoundUpObject->Nice()
 		);
-		if(self::$use_dropdown_in_modifier_form) {
-			$checkField = new DropdownField(
-				'AddDonation',
-				$checkFieldTitle,
-				array(
-					_t("AnyPriceRoundUpDonationModifier.NO", 'No'),
-					_t("AnyPriceRoundUpDonationModifier.YES", 'Yes')
-				),
-				$this->AddDonation
-			);
-		}
-		else {
-			$checkField = new CheckboxField('AddDonation', $checkFieldTitle, $this->AddDonation);
-		}
+		$checkField = new DropdownField(
+			'AddDonation',
+			$checkFieldTitle,
+			array(
+				_t("AnyPriceRoundUpDonationModifier.NO", 'No'),
+				_t("AnyPriceRoundUpDonationModifier.YES", 'Yes')
+			),
+			$this->AddDonation
+		);
 		$fields->push($checkField);
 		$fields->push(new NumericFIeld('OtherValue', _t("AnyPriceRoundUpDonationModifier.OTHERVALUE", "Other Value"), $this->OtherValue));
 		$actions = new FieldList(

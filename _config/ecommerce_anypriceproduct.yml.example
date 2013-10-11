@@ -6,8 +6,8 @@ AnyPriceRoundUpDonationModifier:
   precision: 1
   maximum_round_up: 5
   round_up_even_if_there_is_nothing_to_round: true
-  use_dropdown_in_modifier_form: true
-  
+  include_form_in_order_table: true
+
 ###################################################
 # END ECOMMERCE ANY PRICE PRODUCT
 ###################################################
