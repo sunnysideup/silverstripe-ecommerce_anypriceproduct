@@ -3,7 +3,7 @@
 	"type": "silverstripe-module",
 	"description": "add a 'donation' or 'any price' product to your silverstripe e-commerce ",
 	"homepage": "http://www.silverstripe-ecommerce.com",
-	"keywords": ["ecommerce", "e-commerce", "shop", "any price product", "silverstripe"],
+	"keywords": ["ecommerce", "e-commerce", "shop", "any price product", "silverstripe", "flexible price", "product variation"],
 	"license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
 	"authors":[
 		{
@@ -14,6 +14,11 @@
 		}
 	],
 	"require":{
-		"sunnysideup/ecommerce": "dev-master"
+		"sunnysideup/ecommerce": "dev-master",
+		"sunnysideup/ecommerce_product_variation": "dev-master",
+	},
+	"extra": {
+		"installer-name": "ecommerce_anypriceproduct"
 	}
+}
 }
