@@ -48,7 +48,7 @@ class AnyPriceProductPage extends Product {
 		return !SiteTree::get()->filter(array("ClassName" => 'AnyPriceProductPage'))->count();
 	}
 
-	function canPurchase(Member $member = null) {
+	function canPurchase(Member $member = null, $checkPrice = true) {
 		return true;
 	}
 
@@ -98,7 +98,7 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 	private static $allowed_actions = array(
 		"AddNewPriceForm",
 		"setamount",
-		
+
 	);
 
 	function init() {
