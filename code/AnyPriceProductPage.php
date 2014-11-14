@@ -69,7 +69,7 @@ class AnyPriceProductPage extends Product {
 		);
 		// Standard product detail fields
 		$fields->removeFieldsFromTab(
-			'Root.Main',
+			'Root.Details',
 			array(
 				'Weight',
 				'Price',
@@ -80,7 +80,7 @@ class AnyPriceProductPage extends Product {
 
 		// Flags for this product which affect it's behaviour on the site
 		$fields->removeFieldsFromTab(
-			'Root.Main',
+			'Root.Details',
 			array(
 				'FeaturedProduct'
 			)
@@ -242,6 +242,10 @@ class AnyPriceProductPage_ProductVariation extends ProductVariation {
 	 */
 	protected $defaultClassNameForOrderItem = "AnyPriceProductPage_ProductVariationOrderItem";
 
+	function canPurchase(Member $member = null, $checkPrice = true) {
+		return true;
+	}
+
 }
 
 class AnyPriceProductPage_ProductVariationOrderItem extends ProductVariation_OrderItem {
@@ -250,6 +254,8 @@ class AnyPriceProductPage_ProductVariationOrderItem extends ProductVariation_Ord
 		parent::onBeforeWrite();
 		$this->Quantity = 1;
 	}
+
+
 
 }
 
