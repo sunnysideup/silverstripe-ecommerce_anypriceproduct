@@ -2,6 +2,8 @@
 Ecommerce Any Price Product
 ================================================================================
 
+<img src="https://travis-ci.org/sunnysideup/silverstripe-ecommerce_anypriceproduct.svg?branch=master"/>
+
 This module adds a "product" to e-commerce where
 the customer can determine the price of the product.
 
