@@ -190,7 +190,7 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 		//create new one if needed
 
 		if(isset($data["Description"]) && $data["Description"]) {
-			$description = $data["Description"];
+			$description = Convert::raw2sql($data["Description"]);
 		}
 		elseif($this->DefaultDescription) {
 			$description = $this->DefaultDescription;
@@ -207,6 +207,7 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 			"Price" => $amount,
 			"Description" => $description
 		);
+
 		$obj = AnyPriceProductPage_ProductVariation::get()->filter($filter)->First();
 		if(!$obj) {
 			$obj = AnyPriceProductPage_ProductVariation::create($filter);
@@ -220,7 +221,6 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 		if($obj) {
 			$shoppingCart = ShoppingCart::singleton();
 			$item = $shoppingCart->addBuyable($obj);
-			die("add more stuff to item");
 		}
 		else {
 			$form->sessionMessage(_t("AnyPriceProductPage.ERROROTHER", "Sorry, we could not add your entry."), "bad");
@@ -250,9 +250,7 @@ class AnyPriceProductPage_Controller extends Product_Controller {
 	 * @return float
 	 */ 
 	protected function parseFloat($floatString){
-		die("replace currency");
 		return preg_replace("/([^0-9\\.])/i", "", $floatString);
-		return round(floatval($floatString - 0), 2);
 	}
 
 

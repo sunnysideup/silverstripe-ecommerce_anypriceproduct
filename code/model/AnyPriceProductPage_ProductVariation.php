@@ -17,4 +17,12 @@ class AnyPriceProductPage_ProductVariation extends ProductVariation {
 		return true;
 	}
 
+	function TableSubTitle(){
+		return $this->getTableSubTitle();
+	}
+
+	function getTableSubTitle(){
+		return $this->Description;
+	}
+
 }
