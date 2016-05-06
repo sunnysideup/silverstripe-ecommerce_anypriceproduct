@@ -131,8 +131,8 @@ class AnyPriceProductPage_Controller extends Product_Controller
 {
     private static $allowed_actions = array(
         'AddNewPriceForm',
-        'setamount',
-
+        'doaddnewpriceform',
+        'setamount'
     );
 
     public function init()
@@ -202,28 +202,10 @@ class AnyPriceProductPage_Controller extends Product_Controller
             $titleDescriptor->setValue($amount);
             $description = _t('AnyPriceProductPage.PAYMENTFOR', 'Payment for: ').$titleDescriptor->Nice();
         }
-        //check if we have one now
-        $filter = array(
-            'ProductID' => $this->ID,
-            'Price' => $amount,
-            'Description' => $description,
-        );
-        $className = $this->getClassNameOfVariations();
-        $obj = $className::get()->filter($filter)->First();
-        if (!$obj) {
-            $obj = $className::create($filter);
-        }
 
-        $obj->AllowPurchase = true;
-        $obj->write();
-
-        // line below does not work - suspected bug in framework Versioning System
-        //$componentSet->add($obj);
-
-        if ($obj) {
-            $shoppingCart = ShoppingCart::singleton();
-            $item = $shoppingCart->addBuyable($obj);
-        } else {
+        $variation = $this->createVariationFromData($amount, $description);
+        $item = $this->createOrderItemFromVariation($variation);
+        if( ! $item) {
             $form->sessionMessage(_t('AnyPriceProductPage.ERROROTHER', 'Sorry, we could not add your entry.'), 'bad');
             $this->redirectBack();
 
@@ -233,7 +215,6 @@ class AnyPriceProductPage_Controller extends Product_Controller
         if ($checkoutPage) {
             return $this->redirect($checkoutPage->Link());
         }
-
         return array();
     }
 
@@ -261,6 +242,47 @@ class AnyPriceProductPage_Controller extends Product_Controller
     }
 
     /**
+     *
+     * @param currency $amount
+     * @param string $description
+     *
+     * @return ProductVariation
+     */
+    protected function createVariationFromData($amount, $description) {
+        //check if we have one now
+        $filter = array(
+            'ProductID' => $this->ID,
+            'Price' => $amount,
+            'Description' => $description,
+        );
+        $className = $this->getClassNameOfVariations();
+        $obj = $className::get()->filter($filter)->First();
+        if (!$obj) {
+            $obj = $className::create($filter);
+        }
+
+        $obj->AllowPurchase = true;
+        $obj->write();
+
+        // line below does not work - suspected bug in framework Versioning System
+        //$componentSet->add($obj);
+        return $obj;
+
+    }
+
+    /**
+     * @param Variation (optional) $variation
+     * @return OrderItem | null
+     */
+    protected function createOrderItemFromVariation($variation = null)
+    {
+        if ($variation) {
+            $shoppingCart = ShoppingCart::singleton();
+            return $shoppingCart->addBuyable($variation);
+        }
+    }
+
+    /**
      * A list of variations.
      *
      * @return DataList
@@ -275,13 +297,14 @@ class AnyPriceProductPage_Controller extends Product_Controller
                 }
             }
         }
+        $className = $this->getClassNameOfVariations();
         if (count($options)) {
-            return AnyPriceProductPage_ProductVariation::get()->filter(array(
+            return $className::get()->filter(array(
                 'ProductID' => $this->ID,
                 'Price' => $options,
             ));
         } else {
-            return AnyPriceProductPage_ProductVariation::get()->filter(array(
+            return $className::get()->filter(array(
                 'ProductID' => $this->ID,
             ));
         }
