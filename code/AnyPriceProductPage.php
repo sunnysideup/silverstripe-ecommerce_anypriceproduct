@@ -135,9 +135,33 @@ class AnyPriceProductPage_Controller extends Product_Controller
         'setamount'
     );
 
-    public function init()
+
+    /**
+     * A list of variations.
+     *
+     * @return DataList
+     */
+    public function Variations()
     {
-        parent::init();
+        $options = explode(array(',', ' '), $this->RecommendedAmounts.' 0 0');
+        if (is_array($options)  && count($options)) {
+            foreach ($options as $key => $option) {
+                if (!$option) {
+                    unset($options[$key]);
+                }
+            }
+        }
+        $className = $this->getClassNameOfVariations();
+        if (count($options)) {
+            return $className::get()->filter(array(
+                'ProductID' => $this->ID,
+                'Price' => $options,
+            ));
+        } else {
+            return $className::get()->filter(array(
+                'ProductID' => $this->ID,
+            ));
+        }
     }
 
     public function AddNewPriceForm()
@@ -175,6 +199,7 @@ class AnyPriceProductPage_Controller extends Product_Controller
 
     public function doaddnewpriceform($data, $form)
     {
+        //check amount
         $amount = $this->parseFloat($data['Amount']);
         if ($this->MinimumAmount && ($amount < $this->MinimumAmount)) {
             $form->sessionMessage(_t('AnyPriceProductPage.ERRORINFORMTOOLOW', 'Please enter a higher amount.'), 'bad');
@@ -187,11 +212,12 @@ class AnyPriceProductPage_Controller extends Product_Controller
 
             return;
         }
+
+        //clear settings from URL
         Session::clear('AnyPriceProductPageAmount');
         Session::clear('AnyPriceProductPageDescription');
 
-        //create new one if needed
-
+        //create a description
         if (isset($data['Description']) && $data['Description']) {
             $description = Convert::raw2sql($data['Description']);
         } elseif ($this->DefaultDescription) {
@@ -203,9 +229,18 @@ class AnyPriceProductPage_Controller extends Product_Controller
             $description = _t('AnyPriceProductPage.PAYMENTFOR', 'Payment for: ').$titleDescriptor->Nice();
         }
 
-        $variation = $this->createVariationFromData($amount, $description);
-        $item = $this->createOrderItemFromVariation($variation);
-        if( ! $item) {
+        //create variation and update it ... if needed
+        $variation = $this->createVariationFromData($amount, $description, $data);
+        $variation = $this->updateProductVariation($variation, $data, $form);
+        //create order item and update it ... if needed
+        $orderItem = $this->createOrderItemFromVariation($variation);
+        if(!$orderItem) {
+            user_error("DDD");
+
+        }
+        $orderItem = $this->updateOrderItem($orderItem, $data, $form);
+
+        if( ! $orderItem) {
             $form->sessionMessage(_t('AnyPriceProductPage.ERROROTHER', 'Sorry, we could not add your entry.'), 'bad');
             $this->redirectBack();
 
@@ -213,6 +248,7 @@ class AnyPriceProductPage_Controller extends Product_Controller
         }
         $checkoutPage = CheckoutPage::get()->First();
         if ($checkoutPage) {
+
             return $this->redirect($checkoutPage->Link());
         }
         return array();
@@ -245,10 +281,11 @@ class AnyPriceProductPage_Controller extends Product_Controller
      *
      * @param currency $amount
      * @param string $description
+     * @param array $data (form data)
      *
      * @return ProductVariation
      */
-    protected function createVariationFromData($amount, $description) {
+    protected function createVariationFromData($amount, $description, $data) {
         //check if we have one now
         $filter = array(
             'ProductID' => $this->ID,
@@ -256,17 +293,17 @@ class AnyPriceProductPage_Controller extends Product_Controller
             'Description' => $description,
         );
         $className = $this->getClassNameOfVariations();
-        $obj = $className::get()->filter($filter)->First();
-        if (!$obj) {
-            $obj = $className::create($filter);
+        $variation = $className::get()->filter($filter)->First();
+        if (!$variation) {
+            $variation = $className::create($filter);
         }
 
-        $obj->AllowPurchase = true;
-        $obj->write();
+        $variation->AllowPurchase = true;
+        $variation->write();
 
         // line below does not work - suspected bug in framework Versioning System
         //$componentSet->add($obj);
-        return $obj;
+        return $variation;
 
     }
 
@@ -278,35 +315,37 @@ class AnyPriceProductPage_Controller extends Product_Controller
     {
         if ($variation) {
             $shoppingCart = ShoppingCart::singleton();
-            return $shoppingCart->addBuyable($variation);
+            $orderItem = $shoppingCart->addBuyable($variation);
+            return $orderItem;
         }
     }
 
+
     /**
-     * A list of variations.
+     * you can add this method to a class extending
+     * AnyPriceProductPage_Controller so that you can do something with the Product Variation
      *
-     * @return DataList
+     * @param ProductVariation $variation
+     * @param array $data
+     * @param Form $form
+     *
+     * @return ProductVariation
      */
-    public function Variations()
-    {
-        $options = explode(array(',', ' '), $this->RecommendedAmounts.' 0 0');
-        if (is_array($options)  && count($options)) {
-            foreach ($options as $key => $option) {
-                if (!$option) {
-                    unset($options[$key]);
-                }
-            }
-        }
-        $className = $this->getClassNameOfVariations();
-        if (count($options)) {
-            return $className::get()->filter(array(
-                'ProductID' => $this->ID,
-                'Price' => $options,
-            ));
-        } else {
-            return $className::get()->filter(array(
-                'ProductID' => $this->ID,
-            ));
-        }
+    protected function updateProductVariation($variation, $data, $form) {
+        return $variation;
+    }
+
+    /**
+     * you can add this method to a class extending
+     * AnyPriceProductPage_Controller so that you can do something with the OrderItem
+     *
+     * @param OrderItem $orderItem
+     * @param array $data
+     * @param Form $form
+     *
+     * @return OrderItem
+     */
+    protected function updateOrderItem($orderItem, $data, $form) {
+        return $orderItem;
     }
 }
