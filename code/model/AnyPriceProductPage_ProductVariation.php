@@ -6,7 +6,7 @@ class AnyPriceProductPage_ProductVariation extends ProductVariation {
 	private static $db =array(
 		"Description" => "Varchar(200)"
 	);
-	
+
 	/**
 	 *
 	 * @var String

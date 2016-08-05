@@ -201,12 +201,12 @@ class AnyPriceProductPage_Controller extends Product_Controller
     {
         //check amount
         $amount = $this->parseFloat($data['Amount']);
-        if ($this->MinimumAmount && ($amount < $this->MinimumAmount)) {
+        if ($this->MinimumAmount > 0 && ($amount < $this->MinimumAmount)) {
             $form->sessionMessage(_t('AnyPriceProductPage.ERRORINFORMTOOLOW', 'Please enter a higher amount.'), 'bad');
             $this->redirectBack();
 
             return;
-        } elseif ($this->MaximumAmount && ($amount > $this->MaximumAmount)) {
+        } elseif ($this->MaximumAmount > 0 && ($amount > $this->MaximumAmount)) {
             $form->sessionMessage(_t('AnyPriceProductPage.ERRORINFORMTOOHIGH', 'Please enter a lower amount.'), 'bad');
             $this->redirectBack();
 
@@ -235,8 +235,10 @@ class AnyPriceProductPage_Controller extends Product_Controller
         //create order item and update it ... if needed
         $orderItem = $this->createOrderItemFromVariation($variation);
         if(!$orderItem) {
-            user_error("DDD");
+            $form->sessionMessage(_t('AnyPriceProductPage.ERROROTHER', 'Sorry, we could not add your entry.'), 'bad');
+            $this->redirectBack();
 
+            return;
         }
         $orderItem = $this->updateOrderItem($orderItem, $data, $form);
 
