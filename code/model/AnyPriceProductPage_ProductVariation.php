@@ -1,28 +1,30 @@
 <?php
 
 
-class AnyPriceProductPage_ProductVariation extends ProductVariation {
+class AnyPriceProductPage_ProductVariation extends ProductVariation
+{
+    private static $db =array(
+        "Description" => "Varchar(200)"
+    );
 
-	private static $db =array(
-		"Description" => "Varchar(200)"
-	);
+    /**
+     *
+     * @var String
+     */
+    protected $defaultClassNameForOrderItem = "AnyPriceProductPage_ProductVariationOrderItem";
 
-	/**
-	 *
-	 * @var String
-	 */
-	protected $defaultClassNameForOrderItem = "AnyPriceProductPage_ProductVariationOrderItem";
+    public function canPurchase(Member $member = null, $checkPrice = true)
+    {
+        return true;
+    }
 
-	function canPurchase(Member $member = null, $checkPrice = true) {
-		return true;
-	}
+    public function TableSubTitle()
+    {
+        return $this->getTableSubTitle();
+    }
 
-	function TableSubTitle(){
-		return $this->getTableSubTitle();
-	}
-
-	function getTableSubTitle(){
-		return $this->Description;
-	}
-
+    public function getTableSubTitle()
+    {
+        return $this->Description;
+    }
 }

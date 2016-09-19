@@ -3,13 +3,15 @@
     "type": "silverstripe-module",
     "description": "add a 'donation' or 'any price' product to your silverstripe e-commerce ",
     "keywords": [
+        "Silverstripe-CMS",
+        "CMS",
+        "Silverstripe",
         "ecommerce",
         "e-commerce",
         "shop",
         "donation",
         "round up price",
         "any price product",
-        "silverstripe",
         "flexible price",
         "product variation"
     ],
@@ -22,8 +24,10 @@
         }
     ],
     "require": {
-        "sunnysideup/ecommerce": "dev-master",
-        "sunnysideup/ecommerce_product_variation": "dev-master"
+        "sunnysideup/ecommerce": "*",
+        "sunnysideup/ecommerce_product_variation": "*",
+        "silverstripe/framework": "~3.1",
+        "silverstripe/cms": "~3.1"
     },
     "extra": {
         "installer-name": "ecommerce_anypriceproduct"

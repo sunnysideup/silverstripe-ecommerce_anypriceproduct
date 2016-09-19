@@ -234,7 +234,7 @@ class AnyPriceProductPage_Controller extends Product_Controller
         $variation = $this->updateProductVariation($variation, $data, $form);
         //create order item and update it ... if needed
         $orderItem = $this->createOrderItemFromVariation($variation);
-        if(!$orderItem) {
+        if (!$orderItem) {
             $form->sessionMessage(_t('AnyPriceProductPage.ERROROTHER', 'Sorry, we could not add your entry.'), 'bad');
             $this->redirectBack();
 
@@ -242,7 +242,7 @@ class AnyPriceProductPage_Controller extends Product_Controller
         }
         $orderItem = $this->updateOrderItem($orderItem, $data, $form);
 
-        if( ! $orderItem) {
+        if (! $orderItem) {
             $form->sessionMessage(_t('AnyPriceProductPage.ERROROTHER', 'Sorry, we could not add your entry.'), 'bad');
             $this->redirectBack();
 
@@ -250,7 +250,6 @@ class AnyPriceProductPage_Controller extends Product_Controller
         }
         $checkoutPage = CheckoutPage::get()->First();
         if ($checkoutPage) {
-
             return $this->redirect($checkoutPage->Link());
         }
         return array();
@@ -287,7 +286,8 @@ class AnyPriceProductPage_Controller extends Product_Controller
      *
      * @return ProductVariation
      */
-    protected function createVariationFromData($amount, $description, $data) {
+    protected function createVariationFromData($amount, $description, $data)
+    {
         //check if we have one now
         $filter = array(
             'ProductID' => $this->ID,
@@ -306,7 +306,6 @@ class AnyPriceProductPage_Controller extends Product_Controller
         // line below does not work - suspected bug in framework Versioning System
         //$componentSet->add($obj);
         return $variation;
-
     }
 
     /**
@@ -333,7 +332,8 @@ class AnyPriceProductPage_Controller extends Product_Controller
      *
      * @return ProductVariation
      */
-    protected function updateProductVariation($variation, $data, $form) {
+    protected function updateProductVariation($variation, $data, $form)
+    {
         return $variation;
     }
 
@@ -347,7 +347,8 @@ class AnyPriceProductPage_Controller extends Product_Controller
      *
      * @return OrderItem
      */
-    protected function updateOrderItem($orderItem, $data, $form) {
+    protected function updateOrderItem($orderItem, $data, $form)
+    {
         return $orderItem;
     }
 }
