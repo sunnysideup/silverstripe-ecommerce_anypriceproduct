@@ -248,7 +248,7 @@ class AnyPriceProductPage_Controller extends Product_Controller
 
             return;
         }
-        $checkoutPage = CheckoutPage::get()->First();
+        $checkoutPage = DataObject::get_one('CheckoutPage');
         if ($checkoutPage) {
             return $this->redirect($checkoutPage->Link());
         }
@@ -295,7 +295,7 @@ class AnyPriceProductPage_Controller extends Product_Controller
             'Description' => $description,
         );
         $className = $this->getClassNameOfVariations();
-        $variation = $className::get()->filter($filter)->First();
+        $variation = DataObject::get_one($className, $filter);
         if (!$variation) {
             $variation = $className::create($filter);
         }
