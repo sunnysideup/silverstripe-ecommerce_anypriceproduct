@@ -295,8 +295,12 @@ class AnyPriceProductPage_Controller extends Product_Controller
             'Description' => $description,
         );
         $className = $this->getClassNameOfVariations();
-        $variation = DataObject::get_one($className, $filter);
-        if (!$variation) {
+        $variation = DataObject::get_one(
+            $className,
+            $filter,
+            $cacheDataObjectGetOne = false
+        );
+        if (! $variation) {
             $variation = $className::create($filter);
         }
 
