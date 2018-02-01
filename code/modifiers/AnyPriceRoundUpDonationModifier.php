@@ -28,7 +28,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
         "AddDonation" => "Boolean"
     );
 
-// ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
+    // ######################################## *** cms variables + functions (e.g. getCMSFields, $searchableFields)
 
     public function getCMSFields()
     {
@@ -48,7 +48,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
         return _t("AnyPriceRoundUpDonationModifier.ROUNDUPDONATIONS", "Round Up Donations");
     }
 
-// ######################################## *** other (non) static variables (e.g. private static $special_name_for_something, protected $order)
+    // ######################################## *** other (non) static variables (e.g. private static $special_name_for_something, protected $order)
 
 
     /**
@@ -73,8 +73,8 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
 
     private static $include_form_in_order_table = true;
 
-// ######################################## *** CRUD functions (e.g. canEdit)
-// ######################################## *** init and update functions
+    // ######################################## *** CRUD functions (e.g. canEdit)
+    // ######################################## *** init and update functions
 
     /**
      * For all modifers with their own database fields, we need to include this...
@@ -114,7 +114,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
     }
 
 
-// ######################################## *** form functions (e. g. Showform and getform)
+    // ######################################## *** form functions (e. g. Showform and getform)
 
     /**
      * standard OrderModifier Method
@@ -174,7 +174,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
         return new AnyPriceRoundUpDonationModifier_Form($optionalController, 'AnyPriceRoundUpDonationModifier', $fields, $actions, $optionalValidator);
     }
 
-// ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
+    // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
 
 
     /**
@@ -198,7 +198,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
         return false;
     }
 
-// ######################################## ***  inner calculations.... USES CALCULATED VALUES
+    // ######################################## ***  inner calculations.... USES CALCULATED VALUES
 
 
     /**
@@ -244,7 +244,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
     }
 
 
-// ######################################## *** calculate database fields: protected function Live[field name]  ... USES CALCULATED VALUES
+    // ######################################## *** calculate database fields: protected function Live[field name]  ... USES CALCULATED VALUES
 
     /**
      * if we want to change the default value for the Name field
@@ -341,7 +341,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
     }
 
 
-// ######################################## *** Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)
+    // ######################################## *** Type Functions (IsChargeable, IsDeductable, IsNoChange, IsRemoved)
 
     private static $table_sub_title;
 
@@ -350,7 +350,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
         return _t('AnyPriceRoundUpDonationModifier.TABLESUBTITLE', $this->stat('table_sub_title'));
     }
 
-// ######################################## *** standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
+    // ######################################## *** standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
 
     public function onBeforeWrite()
     {
@@ -358,7 +358,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
     }
 
 
-// ######################################## *** AJAX related functions
+    // ######################################## *** AJAX related functions
     /**
     * some modifiers can be hidden after an ajax update (e.g. if someone enters a discount coupon and it does not exist).
     * There might be instances where ShowInTable (the starting point) is TRUE and HideInAjaxUpdate return false.
@@ -377,7 +377,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
         }
         return true;
     }
-// ######################################## *** debug functions
+    // ######################################## *** debug functions
 }
 
 class AnyPriceRoundUpDonationModifier_Form extends OrderModifierForm
