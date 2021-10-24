@@ -26,7 +26,7 @@
     "require": {
         "sunnysideup/ecommerce": "*",
         "sunnysideup/ecommerce_product_variation": "*",
-        "silverstripe/recipe-cms": "^4.4"
+        "silverstripe/recipe-cms": "*"
     },
     "extra": {
         "installer-name": "ecommerce_anypriceproduct"
