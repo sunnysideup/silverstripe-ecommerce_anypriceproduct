@@ -2,9 +2,14 @@
 
 namespace Sunnysideup\EcommerceAnyPriceProduct\Modifiers;
 
-use OrderModifierForm;
-use Form;
-use ShoppingCart;
+
+
+
+use SilverStripe\Forms\Form;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\EcommerceAnyPriceProduct\Modifiers\DonationModifier;
+use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
+
 
 
 class DonationModifierForm extends OrderModifierForm
@@ -13,7 +18,7 @@ class DonationModifierForm extends OrderModifierForm
     {
         $order = ShoppingCart::current_order();
         if ($order) {
-            $modifier = $order->Modifiers('DonationModifier');
+            $modifier = $order->Modifiers(DonationModifier::class);
             if ($modifier) {
                 $modifier = $modifier->First();
                 $modifier->updateAddDonation($data['DonationID']);

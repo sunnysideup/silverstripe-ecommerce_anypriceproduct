@@ -1,0 +1,423 @@
+2021-10-24 03:59
+
+# running php upgrade upgrade see: https://github.com/silverstripe/silverstripe-upgrader
+cd /var/www/upgrades/ecommerce_anypriceproduct
+php /var/www/ss3/upgrader/vendor/silverstripe/upgrader/bin/upgrade-code upgrade /var/www/upgrades/ecommerce_anypriceproduct/ecommerce_anypriceproduct  --root-dir=/var/www/upgrades/ecommerce_anypriceproduct --write -vvv
+Writing changes for 10 files
+Running upgrades on "/var/www/upgrades/ecommerce_anypriceproduct/ecommerce_anypriceproduct"
+[2021-10-24 15:59:23] Applying RenameClasses to EcommerceAnypriceproductTest.php...
+[2021-10-24 15:59:23] Applying ClassToTraitRule to EcommerceAnypriceproductTest.php...
+[2021-10-24 15:59:23] Applying RenameClasses to DonationOption.php...
+[2021-10-24 15:59:23] Applying ClassToTraitRule to DonationOption.php...
+[2021-10-24 15:59:23] Applying RenameClasses to AnyPriceProductPage_ProductVariationOrderItem.php...
+[2021-10-24 15:59:23] Applying ClassToTraitRule to AnyPriceProductPage_ProductVariationOrderItem.php...
+[2021-10-24 15:59:23] Applying RenameClasses to AnyPriceProductPage_ProductVariation.php...
+[2021-10-24 15:59:23] Applying ClassToTraitRule to AnyPriceProductPage_ProductVariation.php...
+[2021-10-24 15:59:23] Applying RenameClasses to AnyPriceProductPage.php...
+[2021-10-24 15:59:23] Applying ClassToTraitRule to AnyPriceProductPage.php...
+[2021-10-24 15:59:23] Applying RenameClasses to AnyPriceProductPageController.php...
+[2021-10-24 15:59:23] Applying ClassToTraitRule to AnyPriceProductPageController.php...
+[2021-10-24 15:59:23] Applying RenameClasses to DonationModifierForm.php...
+[2021-10-24 15:59:23] Applying ClassToTraitRule to DonationModifierForm.php...
+[2021-10-24 15:59:23] Applying RenameClasses to AnyPriceRoundUpDonationModifierForm.php...
+[2021-10-24 15:59:23] Applying ClassToTraitRule to AnyPriceRoundUpDonationModifierForm.php...
+[2021-10-24 15:59:23] Applying RenameClasses to DonationModifier.php...
+[2021-10-24 15:59:23] Applying ClassToTraitRule to DonationModifier.php...
+[2021-10-24 15:59:23] Applying RenameClasses to AnyPriceRoundUpDonationModifier.php...
+[2021-10-24 15:59:23] Applying ClassToTraitRule to AnyPriceRoundUpDonationModifier.php...
+[2021-10-24 15:59:23] Applying RenameClasses to _config.php...
+[2021-10-24 15:59:23] Applying ClassToTraitRule to _config.php...
+modified:	tests/EcommerceAnypriceproductTest.php
+@@ -1,4 +1,6 @@
+ <?php
++
++use SilverStripe\Dev\SapphireTest;
+
+ class EcommerceAnypriceproductTest extends SapphireTest
+ {
+
+modified:	src/Model/DonationOption.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\EcommerceAnyPriceProduct\Model;
+
+-use DataObject;
++
++use SilverStripe\ORM\DataObject;
++
+
+
+ class DonationOption extends DataObject
+
+modified:	src/Model/AnyPriceProductPage_ProductVariationOrderItem.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\EcommerceAnyPriceProduct\Model;
+
+-use ProductVariation_OrderItem;
++
++use Sunnysideup\EcommerceProductVariation\Model\Process\ProductVariation_OrderItem;
++
+
+
+
+
+modified:	src/Model/AnyPriceProductPage_ProductVariation.php
+@@ -2,8 +2,12 @@
+
+ namespace Sunnysideup\EcommerceAnyPriceProduct\Model;
+
+-use ProductVariation;
+-use Member;
++
++
++use Sunnysideup\EcommerceAnyPriceProduct\Model\AnyPriceProductPage_ProductVariationOrderItem;
++use SilverStripe\Security\Member;
++use Sunnysideup\EcommerceProductVariation\Model\Buyables\ProductVariation;
++
+
+
+
+@@ -31,7 +35,7 @@
+      *
+      * @var String
+      */
+-    protected $defaultClassNameForOrderItem = "AnyPriceProductPage_ProductVariationOrderItem";
++    protected $defaultClassNameForOrderItem = AnyPriceProductPage_ProductVariationOrderItem::class;
+
+     public function canPurchase(Member $member = null, $checkPrice = true)
+     {
+
+modified:	src/AnyPriceProductPage.php
+@@ -2,15 +2,26 @@
+
+ namespace Sunnysideup\EcommerceAnyPriceProduct;
+
+-use Product;
+-use SiteTree;
+-use Member;
+-use Config;
+-use Director;
+-use TextField;
+-use NumericField;
+-use CheckboxField;
+-use LiteralField;
++
++
++
++
++
++
++
++
++
++use SilverStripe\CMS\Model\SiteTree;
++use Sunnysideup\EcommerceAnyPriceProduct\AnyPriceProductPage;
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\Control\Director;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\NumericField;
++use SilverStripe\Forms\CheckboxField;
++use SilverStripe\Forms\LiteralField;
++use Sunnysideup\Ecommerce\Pages\Product;
++
+
+ /**
+  * @author nicolaas [at] sunnysideup.co.nz
+@@ -100,7 +111,7 @@
+
+     public function canCreate($member = null, $context = [])
+     {
+-        return SiteTree::get()->filter(array('ClassName' => 'AnyPriceProductPage'))->count() ? false : true;
++        return SiteTree::get()->filter(array('ClassName' => AnyPriceProductPage::class))->count() ? false : true;
+     }
+
+     public function canPurchase(Member $member = null, $checkPrice = true)
+@@ -121,7 +132,7 @@
+   * EXP: Check if you should be using Name::class here instead of hard-coded class.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        $fieldLabelsRight = Config::inst()->get('AnyPriceProductPage', 'field_labels_right');
++        $fieldLabelsRight = Config::inst()->get(AnyPriceProductPage::class, 'field_labels_right');
+         $exampleLink = Director::absoluteURL($this->Link('setamount')).'/123.45/?description='.urlencode('test payment only');
+         $exampleLinkExplanation = sprintf(_t('AnyPriceProductPage.EXPLANATION', '<br /><br /><h5>How to preset the amount?</h5><p>The link <a href="%1$s">%1$s</a> will pre-set the amount to 123.45. You can use this link (and vary the amount as needed) to cutomers to receive payments.</p>.'), $exampleLink);
+         $fields->addFieldsToTab(
+
+modified:	src/AnyPriceProductPageController.php
+@@ -2,19 +2,33 @@
+
+ namespace Sunnysideup\EcommerceAnyPriceProduct;
+
+-use ProductController;
+-use Controller;
+-use FieldList;
+-use TextField;
+-use CurrencyField;
+-use FormAction;
+-use RequiredFields;
+-use Form;
+-use Convert;
++
++
++
++
++
++
++
++
++
+ use Currency;
+-use EcommercePayment;
+-use DataObject;
+-use ShoppingCart;
++
++
++
++use SilverStripe\Control\Controller;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\CurrencyField;
++use SilverStripe\Forms\FormAction;
++use SilverStripe\Forms\RequiredFields;
++use SilverStripe\Forms\Form;
++use SilverStripe\Core\Convert;
++use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\Ecommerce\Pages\ProductController;
++
+
+
+ class AnyPriceProductPageController extends ProductController
+@@ -201,7 +215,7 @@
+
+             return;
+         }
+-        $checkoutPage = DataObject::get_one('CheckoutPage');
++        $checkoutPage = DataObject::get_one(CheckoutPage::class);
+         if ($checkoutPage) {
+             return $this->redirect($checkoutPage->Link());
+         }
+
+Warnings for src/AnyPriceProductPageController.php:
+ - src/AnyPriceProductPageController.php:64 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 64
+
+ - src/AnyPriceProductPageController.php:78 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 78
+
+ - src/AnyPriceProductPageController.php:302 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 302
+
+modified:	src/Modifiers/DonationModifierForm.php
+@@ -2,9 +2,14 @@
+
+ namespace Sunnysideup\EcommerceAnyPriceProduct\Modifiers;
+
+-use OrderModifierForm;
+-use Form;
+-use ShoppingCart;
++
++
++
++use SilverStripe\Forms\Form;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\EcommerceAnyPriceProduct\Modifiers\DonationModifier;
++use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
++
+
+
+ class DonationModifierForm extends OrderModifierForm
+@@ -13,7 +18,7 @@
+     {
+         $order = ShoppingCart::current_order();
+         if ($order) {
+-            $modifier = $order->Modifiers('DonationModifier');
++            $modifier = $order->Modifiers(DonationModifier::class);
+             if ($modifier) {
+                 $modifier = $modifier->First();
+                 $modifier->updateAddDonation($data['DonationID']);
+
+modified:	src/Modifiers/AnyPriceRoundUpDonationModifierForm.php
+@@ -2,10 +2,16 @@
+
+ namespace Sunnysideup\EcommerceAnyPriceProduct\Modifiers;
+
+-use OrderModifierForm;
+-use Requirements;
+-use Form;
+-use ShoppingCart;
++
++
++
++
++use SilverStripe\View\Requirements;
++use SilverStripe\Forms\Form;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\EcommerceAnyPriceProduct\Modifiers\AnyPriceRoundUpDonationModifier;
++use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
++
+
+
+ class AnyPriceRoundUpDonationModifierForm extends OrderModifierForm
+@@ -20,7 +26,7 @@
+     {
+         $order = ShoppingCart::current_order();
+         if ($order) {
+-            if ($modifiers = $order->Modifiers("AnyPriceRoundUpDonationModifier")) {
++            if ($modifiers = $order->Modifiers(AnyPriceRoundUpDonationModifier::class)) {
+                 $msg = "";
+                 foreach ($modifiers as $modifier) {
+                     if (isset($data['AddDonation']) && $data['AddDonation']) {
+
+modified:	src/Modifiers/DonationModifier.php
+@@ -2,16 +2,22 @@
+
+ namespace Sunnysideup\EcommerceAnyPriceProduct\Modifiers;
+
+-use Controller;
+-use Validator;
+-use DonationOption;
+-use DropdownField;
++
++
++
++
++use Sunnysideup\EcommerceAnyPriceProduct\Model\DonationOption;
++use SilverStripe\Control\Controller;
++use SilverStripe\Forms\Validator;
++use SilverStripe\Forms\DropdownField;
++use Sunnysideup\EcommerceAnyPriceProduct\Modifiers\DonationModifier;
++
+
+
+ class DonationModifier extends AnyPriceRoundUpDonationModifier
+ {
+     private static $has_one = array(
+-        'Donation' => 'DonationOption'
++        'Donation' => DonationOption::class
+     );
+
+     public function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null)
+@@ -29,7 +35,7 @@
+             $source += $donations;
+             $fields->push(new DropdownField('DonationID', $title, $source, $this->DonationID));
+         }
+-        $form = new DonationModifierForm($form->Controller(), 'DonationModifier', $fields, $form->Actions(), $form->getValidator());
++        $form = new DonationModifierForm($form->Controller(), DonationModifier::class, $fields, $form->Actions(), $form->getValidator());
+         //3.0TODO: Check me for consistencies.
+         $form->addExtraClass('anyPriceRoundUpDonationModifier');
+         return $form;
+
+modified:	src/Modifiers/AnyPriceRoundUpDonationModifier.php
+@@ -2,15 +2,25 @@
+
+ namespace Sunnysideup\EcommerceAnyPriceProduct\Modifiers;
+
+-use OrderModifier;
+-use Controller;
+-use Validator;
+-use FieldList;
+-use DBField;
+-use Config;
+-use DropdownField;
++
++
++
++
++
++
++
+ use NumericFIeld;
+-use FormAction;
++
++use SilverStripe\Control\Controller;
++use SilverStripe\Forms\Validator;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\EcommerceAnyPriceProduct\Modifiers\AnyPriceRoundUpDonationModifier;
++use SilverStripe\ORM\FieldType\DBField;
++use SilverStripe\Forms\DropdownField;
++use SilverStripe\Forms\FormAction;
++use Sunnysideup\Ecommerce\Model\OrderModifier;
++
+
+
+ /**
+@@ -174,7 +184,7 @@
+   * EXP: Check if you should be using Name::class here instead of hard-coded class.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        $maxRoundUpObject = DBField::create_field('Currency', Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up'));
++        $maxRoundUpObject = DBField::create_field('Currency', Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'maximum_round_up'));
+         $checkFieldTitle = sprintf(
+             _t("AnyPriceRoundUpDonationModifier.ADDDONATION", "Add round up donation (maximum added %s)?"),
+             $maxRoundUpObject->Nice()
+@@ -193,7 +203,7 @@
+         $actions = new FieldList(
+             new FormAction('submit', 'Update Order')
+         );
+-        return new AnyPriceRoundUpDonationModifierForm($optionalController, 'AnyPriceRoundUpDonationModifier', $fields, $actions, $optionalValidator);
++        return new AnyPriceRoundUpDonationModifierForm($optionalController, AnyPriceRoundUpDonationModifier::class, $fields, $actions, $optionalValidator);
+     }
+
+     // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
+@@ -239,7 +249,7 @@
+   * EXP: Check if you should be using Name::class here instead of hard-coded class.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        if (($this->LiveAddDonation() && Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up') > 0) || $this->OtherValue > 0) {
++        if (($this->LiveAddDonation() && Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'maximum_round_up') > 0) || $this->OtherValue > 0) {
+             return true;
+         }
+         return false;
+@@ -266,7 +276,7 @@
+   * EXP: Check if you should be using Name::class here instead of hard-coded class.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                $precisionMultiplier = pow(10, Config::inst()->get('AnyPriceRoundUpDonationModifier', 'precision'));
++                $precisionMultiplier = pow(10, Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'precision'));
+                 $totalMultipliedByPrecision = $totalExcludingDonation / $precisionMultiplier;
+                 $roundedTotalMultipliedByPrecision = ceil($totalMultipliedByPrecision);
+                 $actualAdditionToTotal = ($roundedTotalMultipliedByPrecision * $precisionMultiplier) - $totalExcludingDonation;
+@@ -279,7 +289,7 @@
+   * EXP: Check if you should be using Name::class here instead of hard-coded class.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                while ($actualAdditionToTotal > Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up') && $actualAdditionToTotal > 0) {
++                while ($actualAdditionToTotal > Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'maximum_round_up') && $actualAdditionToTotal > 0) {
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+@@ -289,7 +299,7 @@
+   * EXP: Check if you should be using Name::class here instead of hard-coded class.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                    $actualAdditionToTotal = $actualAdditionToTotal - Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up');
++                    $actualAdditionToTotal = $actualAdditionToTotal - Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'maximum_round_up');
+                 }
+
+ /**
+@@ -300,7 +310,7 @@
+   * EXP: Check if you should be using Name::class here instead of hard-coded class.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                if (Config::inst()->get('AnyPriceRoundUpDonationModifier', 'round_up_even_if_there_is_nothing_to_round') && $actualAdditionToTotal == 0) {
++                if (Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'round_up_even_if_there_is_nothing_to_round') && $actualAdditionToTotal == 0) {
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+@@ -310,7 +320,7 @@
+   * EXP: Check if you should be using Name::class here instead of hard-coded class.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                    $actualAdditionToTotal = Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up');
++                    $actualAdditionToTotal = Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'maximum_round_up');
+                 }
+             }
+         } else {
+
+Writing changes for 10 files
+✔✔✔

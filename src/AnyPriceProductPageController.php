@@ -2,19 +2,33 @@
 
 namespace Sunnysideup\EcommerceAnyPriceProduct;
 
-use ProductController;
-use Controller;
-use FieldList;
-use TextField;
-use CurrencyField;
-use FormAction;
-use RequiredFields;
-use Form;
-use Convert;
+
+
+
+
+
+
+
+
+
 use Currency;
-use EcommercePayment;
-use DataObject;
-use ShoppingCart;
+
+
+
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\CurrencyField;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Form;
+use SilverStripe\Core\Convert;
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Pages\ProductController;
+
 
 
 class AnyPriceProductPageController extends ProductController
@@ -201,7 +215,7 @@ class AnyPriceProductPageController extends ProductController
 
             return;
         }
-        $checkoutPage = DataObject::get_one('CheckoutPage');
+        $checkoutPage = DataObject::get_one(CheckoutPage::class);
         if ($checkoutPage) {
             return $this->redirect($checkoutPage->Link());
         }

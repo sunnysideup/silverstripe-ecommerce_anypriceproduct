@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\EcommerceAnyPriceProduct\Model;
 
-use DataObject;
+
+use SilverStripe\ORM\DataObject;
+
 
 
 class DonationOption extends DataObject

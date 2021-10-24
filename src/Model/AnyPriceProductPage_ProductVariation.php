@@ -2,8 +2,12 @@
 
 namespace Sunnysideup\EcommerceAnyPriceProduct\Model;
 
-use ProductVariation;
-use Member;
+
+
+use Sunnysideup\EcommerceAnyPriceProduct\Model\AnyPriceProductPage_ProductVariationOrderItem;
+use SilverStripe\Security\Member;
+use Sunnysideup\EcommerceProductVariation\Model\Buyables\ProductVariation;
+
 
 
 
@@ -31,7 +35,7 @@ class AnyPriceProductPage_ProductVariation extends ProductVariation
      *
      * @var String
      */
-    protected $defaultClassNameForOrderItem = "AnyPriceProductPage_ProductVariationOrderItem";
+    protected $defaultClassNameForOrderItem = AnyPriceProductPage_ProductVariationOrderItem::class;
 
     public function canPurchase(Member $member = null, $checkPrice = true)
     {

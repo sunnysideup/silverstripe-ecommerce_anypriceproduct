@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\EcommerceAnyPriceProduct\Model;
 
-use ProductVariation_OrderItem;
+
+use Sunnysideup\EcommerceProductVariation\Model\Process\ProductVariation_OrderItem;
+
 
 
 

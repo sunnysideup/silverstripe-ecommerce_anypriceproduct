@@ -2,15 +2,26 @@
 
 namespace Sunnysideup\EcommerceAnyPriceProduct;
 
-use Product;
-use SiteTree;
-use Member;
-use Config;
-use Director;
-use TextField;
-use NumericField;
-use CheckboxField;
-use LiteralField;
+
+
+
+
+
+
+
+
+
+use SilverStripe\CMS\Model\SiteTree;
+use Sunnysideup\EcommerceAnyPriceProduct\AnyPriceProductPage;
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Director;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\LiteralField;
+use Sunnysideup\Ecommerce\Pages\Product;
+
 
 /**
  * @author nicolaas [at] sunnysideup.co.nz
@@ -100,7 +111,7 @@ class AnyPriceProductPage extends Product
 
     public function canCreate($member = null, $context = [])
     {
-        return SiteTree::get()->filter(array('ClassName' => 'AnyPriceProductPage'))->count() ? false : true;
+        return SiteTree::get()->filter(array('ClassName' => AnyPriceProductPage::class))->count() ? false : true;
     }
 
     public function canPurchase(Member $member = null, $checkPrice = true)
@@ -121,7 +132,7 @@ class AnyPriceProductPage extends Product
   * EXP: Check if you should be using Name::class here instead of hard-coded class.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        $fieldLabelsRight = Config::inst()->get('AnyPriceProductPage', 'field_labels_right');
+        $fieldLabelsRight = Config::inst()->get(AnyPriceProductPage::class, 'field_labels_right');
         $exampleLink = Director::absoluteURL($this->Link('setamount')).'/123.45/?description='.urlencode('test payment only');
         $exampleLinkExplanation = sprintf(_t('AnyPriceProductPage.EXPLANATION', '<br /><br /><h5>How to preset the amount?</h5><p>The link <a href="%1$s">%1$s</a> will pre-set the amount to 123.45. You can use this link (and vary the amount as needed) to cutomers to receive payments.</p>.'), $exampleLink);
         $fields->addFieldsToTab(

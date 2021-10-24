@@ -2,16 +2,22 @@
 
 namespace Sunnysideup\EcommerceAnyPriceProduct\Modifiers;
 
-use Controller;
-use Validator;
-use DonationOption;
-use DropdownField;
+
+
+
+
+use Sunnysideup\EcommerceAnyPriceProduct\Model\DonationOption;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\Validator;
+use SilverStripe\Forms\DropdownField;
+use Sunnysideup\EcommerceAnyPriceProduct\Modifiers\DonationModifier;
+
 
 
 class DonationModifier extends AnyPriceRoundUpDonationModifier
 {
     private static $has_one = array(
-        'Donation' => 'DonationOption'
+        'Donation' => DonationOption::class
     );
 
     public function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null)
@@ -29,7 +35,7 @@ class DonationModifier extends AnyPriceRoundUpDonationModifier
             $source += $donations;
             $fields->push(new DropdownField('DonationID', $title, $source, $this->DonationID));
         }
-        $form = new DonationModifierForm($form->Controller(), 'DonationModifier', $fields, $form->Actions(), $form->getValidator());
+        $form = new DonationModifierForm($form->Controller(), DonationModifier::class, $fields, $form->Actions(), $form->getValidator());
         //3.0TODO: Check me for consistencies.
         $form->addExtraClass('anyPriceRoundUpDonationModifier');
         return $form;

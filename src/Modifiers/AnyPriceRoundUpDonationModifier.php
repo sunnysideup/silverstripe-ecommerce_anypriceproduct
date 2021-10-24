@@ -2,15 +2,25 @@
 
 namespace Sunnysideup\EcommerceAnyPriceProduct\Modifiers;
 
-use OrderModifier;
-use Controller;
-use Validator;
-use FieldList;
-use DBField;
-use Config;
-use DropdownField;
+
+
+
+
+
+
+
 use NumericFIeld;
-use FormAction;
+
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\Validator;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\EcommerceAnyPriceProduct\Modifiers\AnyPriceRoundUpDonationModifier;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FormAction;
+use Sunnysideup\Ecommerce\Model\OrderModifier;
+
 
 
 /**
@@ -174,7 +184,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
   * EXP: Check if you should be using Name::class here instead of hard-coded class.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        $maxRoundUpObject = DBField::create_field('Currency', Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up'));
+        $maxRoundUpObject = DBField::create_field('Currency', Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'maximum_round_up'));
         $checkFieldTitle = sprintf(
             _t("AnyPriceRoundUpDonationModifier.ADDDONATION", "Add round up donation (maximum added %s)?"),
             $maxRoundUpObject->Nice()
@@ -193,7 +203,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
         $actions = new FieldList(
             new FormAction('submit', 'Update Order')
         );
-        return new AnyPriceRoundUpDonationModifierForm($optionalController, 'AnyPriceRoundUpDonationModifier', $fields, $actions, $optionalValidator);
+        return new AnyPriceRoundUpDonationModifierForm($optionalController, AnyPriceRoundUpDonationModifier::class, $fields, $actions, $optionalValidator);
     }
 
     // ######################################## *** template functions (e.g. ShowInTable, TableTitle, etc...) ... USES DB VALUES
@@ -239,7 +249,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
   * EXP: Check if you should be using Name::class here instead of hard-coded class.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        if (($this->LiveAddDonation() && Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up') > 0) || $this->OtherValue > 0) {
+        if (($this->LiveAddDonation() && Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'maximum_round_up') > 0) || $this->OtherValue > 0) {
             return true;
         }
         return false;
@@ -266,7 +276,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
   * EXP: Check if you should be using Name::class here instead of hard-coded class.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                $precisionMultiplier = pow(10, Config::inst()->get('AnyPriceRoundUpDonationModifier', 'precision'));
+                $precisionMultiplier = pow(10, Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'precision'));
                 $totalMultipliedByPrecision = $totalExcludingDonation / $precisionMultiplier;
                 $roundedTotalMultipliedByPrecision = ceil($totalMultipliedByPrecision);
                 $actualAdditionToTotal = ($roundedTotalMultipliedByPrecision * $precisionMultiplier) - $totalExcludingDonation;
@@ -279,7 +289,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
   * EXP: Check if you should be using Name::class here instead of hard-coded class.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                while ($actualAdditionToTotal > Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up') && $actualAdditionToTotal > 0) {
+                while ($actualAdditionToTotal > Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'maximum_round_up') && $actualAdditionToTotal > 0) {
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
@@ -289,7 +299,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
   * EXP: Check if you should be using Name::class here instead of hard-coded class.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                    $actualAdditionToTotal = $actualAdditionToTotal - Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up');
+                    $actualAdditionToTotal = $actualAdditionToTotal - Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'maximum_round_up');
                 }
 
 /**
@@ -300,7 +310,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
   * EXP: Check if you should be using Name::class here instead of hard-coded class.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                if (Config::inst()->get('AnyPriceRoundUpDonationModifier', 'round_up_even_if_there_is_nothing_to_round') && $actualAdditionToTotal == 0) {
+                if (Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'round_up_even_if_there_is_nothing_to_round') && $actualAdditionToTotal == 0) {
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
@@ -310,7 +320,7 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
   * EXP: Check if you should be using Name::class here instead of hard-coded class.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                    $actualAdditionToTotal = Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up');
+                    $actualAdditionToTotal = Config::inst()->get(AnyPriceRoundUpDonationModifier::class, 'maximum_round_up');
                 }
             }
         } else {
