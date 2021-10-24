@@ -1,6 +1,6 @@
 {
     "name": "sunnysideup/ecommerce_anypriceproduct",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "description": "add a 'donation' or 'any price' product to your silverstripe e-commerce ",
     "keywords": [
         "Silverstripe-CMS",
