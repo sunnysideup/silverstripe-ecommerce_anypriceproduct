@@ -28,5 +28,10 @@
         "sunnysideup/ecommerce_product_variation": "*",
         "silverstripe/recipe-cms": "*"
     },
-    "extra": []
+    "extra": [],
+    "autoload": {
+        "psr-4": {
+            "Sunnysideup\\EcommerceAnyPriceProduct\\": "src/"
+        }
+    }
 }
