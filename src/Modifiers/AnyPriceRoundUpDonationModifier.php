@@ -1,5 +1,18 @@
 <?php
 
+namespace Sunnysideup\EcommerceAnyPriceProduct\Modifiers;
+
+use OrderModifier;
+use Controller;
+use Validator;
+use FieldList;
+use DBField;
+use Config;
+use DropdownField;
+use NumericFIeld;
+use FormAction;
+
+
 /**
  * @author Nicolaas [at] sunnysideup.co.nz
  * @package: ecommerce

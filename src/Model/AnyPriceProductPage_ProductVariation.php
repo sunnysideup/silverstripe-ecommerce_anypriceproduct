@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\EcommerceAnyPriceProduct\Model;
+
+use ProductVariation;
+use Member;
+
+
 
 class AnyPriceProductPage_ProductVariation extends ProductVariation
 {

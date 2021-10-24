@@ -1,4 +1,17 @@
 <?php
+
+namespace Sunnysideup\EcommerceAnyPriceProduct;
+
+use Product;
+use SiteTree;
+use Member;
+use Config;
+use Director;
+use TextField;
+use NumericField;
+use CheckboxField;
+use LiteralField;
+
 /**
  * @author nicolaas [at] sunnysideup.co.nz
  * @requires ecommerce

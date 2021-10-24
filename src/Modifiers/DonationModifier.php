@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\EcommerceAnyPriceProduct\Modifiers;
+
+use Controller;
+use Validator;
+use DonationOption;
+use DropdownField;
+
+
 class DonationModifier extends AnyPriceRoundUpDonationModifier
 {
     private static $has_one = array(

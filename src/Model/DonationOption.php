@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\EcommerceAnyPriceProduct\Model;
+
+use DataObject;
+
+
 class DonationOption extends DataObject
 {
 

@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\EcommerceAnyPriceProduct\Modifiers;
+
+use OrderModifierForm;
+use Requirements;
+use Form;
+use ShoppingCart;
+
+
 class AnyPriceRoundUpDonationModifierForm extends OrderModifierForm
 {
     public function __construct($optionalController = null, $name, $fields, $actions, $optionalValidator = null)

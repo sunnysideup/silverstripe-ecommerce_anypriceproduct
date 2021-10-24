@@ -1,5 +1,22 @@
 <?php
 
+namespace Sunnysideup\EcommerceAnyPriceProduct;
+
+use ProductController;
+use Controller;
+use FieldList;
+use TextField;
+use CurrencyField;
+use FormAction;
+use RequiredFields;
+use Form;
+use Convert;
+use Currency;
+use EcommercePayment;
+use DataObject;
+use ShoppingCart;
+
+
 class AnyPriceProductPageController extends ProductController
 {
     private static $allowed_actions = array(

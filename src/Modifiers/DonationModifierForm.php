@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\EcommerceAnyPriceProduct\Modifiers;
+
+use OrderModifierForm;
+use Form;
+use ShoppingCart;
+
+
 class DonationModifierForm extends OrderModifierForm
 {
     public function submit(array $data, Form $form, $message = "order updated", $status = "good")
