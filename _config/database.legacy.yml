@@ -1,0 +1,11 @@
+SilverStripe\ORM\DatabaseAdmin:
+  classname_value_remapping:
+    DonationOption: Sunnysideup\EcommerceAnyPriceProduct\Model\DonationOption
+    AnyPriceProductPage_ProductVariationOrderItem: Sunnysideup\EcommerceAnyPriceProduct\Model\AnyPriceProductPage_ProductVariationOrderItem
+    AnyPriceProductPage_ProductVariation: Sunnysideup\EcommerceAnyPriceProduct\Model\AnyPriceProductPage_ProductVariation
+    AnyPriceProductPage: Sunnysideup\EcommerceAnyPriceProduct\AnyPriceProductPage
+    AnyPriceProductPageController: Sunnysideup\EcommerceAnyPriceProduct\AnyPriceProductPageController
+    DonationModifierForm: Sunnysideup\EcommerceAnyPriceProduct\Modifiers\DonationModifierForm
+    AnyPriceRoundUpDonationModifierForm: Sunnysideup\EcommerceAnyPriceProduct\Modifiers\AnyPriceRoundUpDonationModifierForm
+    DonationModifier: Sunnysideup\EcommerceAnyPriceProduct\Modifiers\DonationModifier
+    AnyPriceRoundUpDonationModifier: Sunnysideup\EcommerceAnyPriceProduct\Modifiers\AnyPriceRoundUpDonationModifier
