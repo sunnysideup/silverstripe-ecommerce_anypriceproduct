@@ -5,7 +5,7 @@ class AnyPriceRoundUpDonationModifierForm extends OrderModifierForm
     public function __construct($optionalController = null, $name, $fields, $actions, $optionalValidator = null)
     {
         parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
-        Requirements::javascript("ecommerce_anypriceproduct/javascript/AnyPriceRoundUpDonationModifier.js");
+        Requirements::javascript("sunnysideup/ecommerce_anypriceproduct: ecommerce_anypriceproduct/javascript/AnyPriceRoundUpDonationModifier.js");
     }
 
     public function submit(array $data, Form $form, $message = "order updated", $status = "good")
