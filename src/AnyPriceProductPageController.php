@@ -24,13 +24,40 @@ class AnyPriceProductPageController extends ProductController
                 }
             }
         }
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $className = $this->getClassNameOfVariations();
         if (count($options)) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             return $className::get()->filter(array(
                 'ProductID' => $this->ID,
                 'Price' => $options,
             ));
         } else {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             return $className::get()->filter(array(
                 'ProductID' => $this->ID,
             ));
@@ -39,13 +66,31 @@ class AnyPriceProductPageController extends ProductController
 
     public function AddNewPriceForm()
     {
-        $requiredFields = array();
+        $requiredFields = [];
         $amount = $this->MinimumAmount;
-        if ($newAmount = Session::get('AnyPriceProductPageAmount')) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if ($newAmount = Controller::curr()->getRequest()->getSession()->get('AnyPriceProductPageAmount')) {
             $amount = $newAmount;
         }
         $description = $this->DefaultDescription;
-        if ($newDescription = Session::get('AnyPriceProductPageDescription')) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if ($newDescription = Controller::curr()->getRequest()->getSession()->get('AnyPriceProductPageDescription')) {
             $description = $newDescription;
         }
         $fields = FieldList::create();
@@ -87,8 +132,26 @@ class AnyPriceProductPageController extends ProductController
         }
 
         //clear settings from URL
-        Session::clear('AnyPriceProductPageAmount');
-        Session::clear('AnyPriceProductPageDescription');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        Controller::curr()->getRequest()->getSession()->clear('AnyPriceProductPageAmount');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        Controller::curr()->getRequest()->getSession()->clear('AnyPriceProductPageDescription');
 
         //create a description
         if (isset($data['Description']) && $data['Description']) {
@@ -131,10 +194,28 @@ class AnyPriceProductPageController extends ProductController
     public function setamount($request)
     {
         if ($amount = floatval($request->param('ID'))) {
-            Session::set('AnyPriceProductPageAmount', $amount);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            Controller::curr()->getRequest()->getSession()->set('AnyPriceProductPageAmount', $amount);
         }
         if ($description = Convert::raw2sql($request->param('OtherID'))) {
-            Session::set('AnyPriceProductPageDescription', $_GET['description']);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            Controller::curr()->getRequest()->getSession()->set('AnyPriceProductPageDescription', $_GET['description']);
         }
         $this->redirect($this->Link());
 
@@ -167,13 +248,40 @@ class AnyPriceProductPageController extends ProductController
             'Price' => $amount,
             'Description' => $description,
         );
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $className = $this->getClassNameOfVariations();
         $variation = DataObject::get_one(
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $className,
             $filter,
             $cacheDataObjectGetOne = false
         );
         if (! $variation) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $variation = $className::create($filter);
         }
 

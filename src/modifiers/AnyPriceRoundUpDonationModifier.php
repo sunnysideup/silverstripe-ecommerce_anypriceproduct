@@ -152,6 +152,15 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
         $fields = new FieldList();
         $fields->push($this->headingField());
         $fields->push($this->descriptionField());
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Config::inst()->get(" (case sensitive)
+  * NEW: Config::inst()->get(" (COMPLEX)
+  * EXP: Check if you should be using Name::class here instead of hard-coded class.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $maxRoundUpObject = DBField::create_field('Currency', Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up'));
         $checkFieldTitle = sprintf(
             _t("AnyPriceRoundUpDonationModifier.ADDDONATION", "Add round up donation (maximum added %s)?"),
@@ -208,6 +217,15 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
      */
     protected function hasDonation()
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Config::inst()->get(" (case sensitive)
+  * NEW: Config::inst()->get(" (COMPLEX)
+  * EXP: Check if you should be using Name::class here instead of hard-coded class.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         if (($this->LiveAddDonation() && Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up') > 0) || $this->OtherValue > 0) {
             return true;
         }
@@ -226,14 +244,59 @@ class AnyPriceRoundUpDonationModifier extends OrderModifier
                 $actualAdditionToTotal = $this->OtherValue;
             } else {
                 $totalExcludingDonation = $this->LiveSubTotal() + $this->LiveModifierTotalExcludingDonation();
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Config::inst()->get(' (case sensitive)
+  * NEW: Config::inst()->get(' (COMPLEX)
+  * EXP: Check if you should be using Name::class here instead of hard-coded class.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $precisionMultiplier = pow(10, Config::inst()->get('AnyPriceRoundUpDonationModifier', 'precision'));
                 $totalMultipliedByPrecision = $totalExcludingDonation / $precisionMultiplier;
                 $roundedTotalMultipliedByPrecision = ceil($totalMultipliedByPrecision);
                 $actualAdditionToTotal = ($roundedTotalMultipliedByPrecision * $precisionMultiplier) - $totalExcludingDonation;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Config::inst()->get(" (case sensitive)
+  * NEW: Config::inst()->get(" (COMPLEX)
+  * EXP: Check if you should be using Name::class here instead of hard-coded class.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 while ($actualAdditionToTotal > Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up') && $actualAdditionToTotal > 0) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Config::inst()->get(" (case sensitive)
+  * NEW: Config::inst()->get(" (COMPLEX)
+  * EXP: Check if you should be using Name::class here instead of hard-coded class.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                     $actualAdditionToTotal = $actualAdditionToTotal - Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up');
                 }
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Config::inst()->get(' (case sensitive)
+  * NEW: Config::inst()->get(' (COMPLEX)
+  * EXP: Check if you should be using Name::class here instead of hard-coded class.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 if (Config::inst()->get('AnyPriceRoundUpDonationModifier', 'round_up_even_if_there_is_nothing_to_round') && $actualAdditionToTotal == 0) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Config::inst()->get(" (case sensitive)
+  * NEW: Config::inst()->get(" (COMPLEX)
+  * EXP: Check if you should be using Name::class here instead of hard-coded class.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                     $actualAdditionToTotal = Config::inst()->get("AnyPriceRoundUpDonationModifier", 'maximum_round_up');
                 }
             }
